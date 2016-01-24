@@ -59,6 +59,7 @@ fi
 
 EOF
     printf "%s\n" "generated ${VALA_PROJECT[PATH]}/${VALA_PROJECT[AUTOGEN]}"
+    chmod 700 "${VALA_PROJECT[PATH]}/${VALA_PROJECT[AUTOGEN]}"
     return $SUCCESS
 }
 
@@ -118,7 +119,7 @@ function __gen_desktop_in() {
         printf "%s\n" "already exist ${VALA_PROJECT[PATH]}/${VALA_PROJECT[DESKTOP]}"
         return $NOT_SUCCESS
     fi
-    cat<<EOF>>"${VALA_PROJECT[PATH]}/${VALA_PROJECT[DESKTOP]}"
+    cat<<EOF>>"${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}.${VALA_PROJECT[DESKTOP]}"
 [Desktop Entry]
 Version=1.0
 Encoding=UTF-8
@@ -131,7 +132,7 @@ Type=Application
 StartupNotify=true
 Categories=GNOME;GTK;Utility;
 EOF
-    printf "%s\n" "generated ${VALA_PROJECT[PATH]}/${VALA_PROJECT[DESKTOP]}"
+    printf "%s\n" "generated ${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}.${VALA_PROJECT[DESKTOP]}"
     return $SUCCESS
 }
 
