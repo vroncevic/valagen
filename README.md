@@ -1,5 +1,4 @@
-# valagen
-Project generator for Vala project (Bash script) version 1.0
+Project generator for Vala project (Bash scripts)
 ================================================================================
 
 The README is used to introduce the tool and provide instructions on
@@ -31,3 +30,6 @@ Copyright (C) 2016 by www.frobas.com
 This tool is free software; you can redistribute it and/or modify
 it under the same terms as Bash itself, either Bash version 4.2.47 or,
 at your option, any later version of Bash 4 you may have available.
+
+![alt tag](https://raw.githubusercontent.com/vroncevic/valagen/master/bash_logo_255_113.png)
+![alt tag](https://raw.githubusercontent.com/vroncevic/valagen/master/linux_logo_327_215.jpg)
