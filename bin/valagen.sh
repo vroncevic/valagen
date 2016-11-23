@@ -86,6 +86,12 @@ function __gen_autogen_sh() {
 	fi
     if [ -f "$AUTOGEN_SH" ]; then
         printf "%s\n" "[already exist]"
+		MSG="[$VALA_PROJECT[NAME]] $AUTOGEN_SH already exist"
+		if [ "${configossl[LOGGING]}" == "true" ]; then
+			LOG[MSG]=$MSG
+			LOG[FLAG]="error"
+			__logging $LOG
+		fi
         return $NOT_SUCCESS
     fi
     local DATE=$(date)
@@ -123,6 +129,12 @@ fi
     if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
 	fi
+	MSG="[$VALA_PROJECT[NAME]] Generated $AUTOGEN_SH"
+	if [ "${configossl[LOGGING]}" == "true" ]; then
+		LOG[MSG]=$MSG
+		LOG[FLAG]="info"
+		__logging $LOG
+	fi
     return $SUCCESS
 }
 
@@ -158,6 +170,12 @@ function __gen_configure_ac() {
 	fi
     if [ -f "$CONFIGURE_AC" ]; then
         printf "%s\n" "[already exist]"
+		MSG="[$VALA_PROJECT[NAME]] $CONFIGURE_AC already exist"
+		if [ "${configossl[LOGGING]}" == "true" ]; then
+			LOG[MSG]=$MSG
+			LOG[FLAG]="error"
+			__logging $LOG
+		fi
         return $NOT_SUCCESS
     fi
     local DATE=$(date)
@@ -191,6 +209,12 @@ AC_OUTPUT
     chmod 700 "$CONFIGURE_AC"
     if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
+	fi
+	MSG="[$VALA_PROJECT[NAME]] Generated $CONFIGURE_AC"
+	if [ "${configossl[LOGGING]}" == "true" ]; then
+		LOG[MSG]=$MSG
+		LOG[FLAG]="info"
+		__logging $LOG
 	fi
     return $SUCCESS
 }
@@ -227,6 +251,12 @@ function __gen_desktop_in() {
 	fi
     if [ -f "$DESKTOP_IN" ]; then
         printf "%s\n" "[already exist]"
+		MSG="[$VALA_PROJECT[NAME]] $DESKTOP_IN already exist"
+		if [ "${configossl[LOGGING]}" == "true" ]; then
+			LOG[MSG]=$MSG
+			LOG[FLAG]="error"
+			__logging $LOG
+		fi
         return $NOT_SUCCESS
     fi
     local DATE=$(date)
@@ -259,6 +289,12 @@ Categories=GNOME;GTK;Utility;
     chmod 700 "$DESKTOP_IN"
     if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
+	fi
+	MSG="[$VALA_PROJECT[NAME]] Generated $DESKTOP_IN"
+	if [ "${configossl[LOGGING]}" == "true" ]; then
+		LOG[MSG]=$MSG
+		LOG[FLAG]="info"
+		__logging $LOG
 	fi
     return $SUCCESS
 }
@@ -295,6 +331,12 @@ function __gen_makefile_am() {
 	fi
     if [ -f "$MAKEFILE_AM" ]; then
         printf "%s\n" "[already exist]"
+		MSG="[$VALA_PROJECT[NAME]] $MAKEFILE_AM already exist"
+		if [ "${configossl[LOGGING]}" == "true" ]; then
+			LOG[MSG]=$MSG
+			LOG[FLAG]="error"
+			__logging $LOG
+		fi
         return $NOT_SUCCESS
     fi
     local DATE=$(date)
@@ -329,6 +371,12 @@ desktop_DATA = \
     chmod 700 "$MAKEFILE_AM"
     if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
+	fi
+	MSG="[$VALA_PROJECT[NAME]] Generated $MAKEFILE_AM"
+	if [ "${configossl[LOGGING]}" == "true" ]; then
+		LOG[MSG]=$MSG
+		LOG[FLAG]="info"
+		__logging $LOG
 	fi
     return $SUCCESS
 }
@@ -365,6 +413,12 @@ function __gen_readme() {
 	fi
     if [ -f "$README" ]; then
         printf "%s\n" "[already exist]"
+		MSG="[$VALA_PROJECT[NAME]] $README already exist"
+		if [ "${configossl[LOGGING]}" == "true" ]; then
+			LOG[MSG]=$MSG
+			LOG[FLAG]="info"
+			__logging $LOG
+		fi
         return $NOT_SUCCESS
     fi
     local DATE=$(date)
@@ -432,6 +486,12 @@ make distcheck
     if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
 	fi
+	MSG="[$VALA_PROJECT[NAME]] Generated $README"
+	if [ "${configossl[LOGGING]}" == "true" ]; then
+		LOG[MSG]=$MSG
+		LOG[FLAG]="info"
+		__logging $LOG
+	fi
     return $SUCCESS
 }
 
@@ -467,6 +527,12 @@ function __gen_vala_code() {
 	fi
     if [ -f "$VALA_CODE" ]; then
         printf "%s\n" "[already exist]"
+		MSG="[$VALA_PROJECT[NAME]] $VALA_CODE already exist"
+		if [ "${configossl[LOGGING]}" == "true" ]; then
+			LOG[MSG]=$MSG
+			LOG[FLAG]="error"
+			__logging $LOG
+		fi
         return $NOT_SUCCESS
     fi
     local DATE=$(date)
@@ -509,6 +575,12 @@ public int main (string[] args) {
     if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
 	fi
+	MSG="[$VALA_PROJECT[NAME]] Generated $VALA_CODE"
+	if [ "${configossl[LOGGING]}" == "true" ]; then
+		LOG[MSG]=$MSG
+		LOG[FLAG]="info"
+		__logging $LOG
+	fi
     return $SUCCESS
 }
 
@@ -531,10 +603,10 @@ function __valagen() {
 	if [ "${VALA_PROJECT[NAME]}" != "none" ] && 
 	   [ "${VALA_PROJECT[PATH]}" != "none" ] &&
 	   [ "${VALA_PROJECT[COMMENT]}" != "none" ]; then
-	   if [ "$TOOL_DBG" == "true" ]; then
+	   	if [ "$TOOL_DBG" == "true" ]; then
 			MSG="Checking dir [${VALA_PROJECT[PATH]}/]"
 			printf "$DQUE" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-		fi
+	   	fi
 		if [ -d "${VALA_PROJECT[PATH]}/" ]; then
 			printf "%s\n" "[ok]"
 			local ROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
@@ -586,8 +658,14 @@ function __valagen() {
 		fi
 		if [ "$TOOL_DBG" == "true" ]; then
 			printf "%s\n" "[not exist]"
-			MSG="Generating [${VALA_PROJECT[PATH]}/]"
+			MSG="Generate [${VALA_PROJECT[PATH]}/]"
 			printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
+		fi
+		MSG="[$VALA_PROJECT[NAME]] [${VALA_PROJECT[PATH]}/ does not exist"
+		if [ "${configossl[LOGGING]}" == "true" ]; then
+			LOG[MSG]=$MSG
+			LOG[FLAG]="error"
+			__logging $LOG
 		fi
 		exit 129
 	fi
