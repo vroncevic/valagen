@@ -33,6 +33,13 @@ declare -A VALAGEN_USAGE=(
 	[EX]="__$VALAGEN_TOOL ftool /opt/ \"Font generator\""
 )
 
+declare -A LOG=(
+	[TOOL]="$VALAGEN_TOOL"
+	[FLAG]="info"
+	[PATH]="$VALAGEN_LOG"
+	[MSG]=""
+)
+
 TOOL_DBG="false"
 
 declare -A VALA_PROJECT=(
@@ -87,24 +94,24 @@ function __gen_autogen_sh() {
 		MSG="Generating [$AUTOGEN_SH]"
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
 	fi
-	cat<<EOF>>"$AUTOGEN_SH"
+	local AUTOGEN_SH_FILE="
 #!/bin/bash
 # Powered by $TOOL_FROM_COMPANY 
 # $DATE
 # Project ${VALA_PROJECT[NAME]}
 #
 set -e
-test -n "\$srcdir" || srcdir=\`dirname "\$0"\`
-test -n "\$srcdir" || srcdir=.
+test -n \"\$srcdir\" || srcdir=\`dirname \"\$0\"\`
+test -n \"\$srcdir\" || srcdir=.
 olddir=\`pwd\`
-cd "\$srcdir"
+cd \"\$srcdir\"
 autoreconf --force --install
-cd "\$olddir"
-if test -z "\$NOCONFIGURE"; then
-  "\$srcdir"/configure "\$@"
+cd \"\$olddir\"
+if test -z \"\$NOCONFIGURE\"; then
+  \"\$srcdir\"/configure \"\$@\"
 fi
-
-EOF
+"
+	echo -e "$AUTOGEN_SH_FILE" > "$AUTOGEN_SH"
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$AUTOGEN_SH]"
 	fi
@@ -159,7 +166,7 @@ function __gen_configure_ac() {
 		MSG="Generating [$CONFIGURE_AC]"
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
 	fi
-	cat<<EOF>>"$CONFIGURE_AC"
+	local CONFIGURE_AC_FILE="
 #
 # Powered by $TOOL_FROM_COMPANY 
 # $DATE
@@ -172,7 +179,8 @@ AM_PROG_VALAC([0.16])
 PKG_CHECK_MODULES(gtk, gtk+-3.0)
 AC_CONFIG_FILES([Makefile ${VALA_PROJECT[NAME]}.desktop])
 AC_OUTPUT
-EOF
+"
+	echo -e "$CONFIGURE_AC_FILE" > "$CONFIGURE_AC"
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$CONFIGURE_AC]"
 	fi
@@ -227,7 +235,7 @@ function __gen_desktop_in() {
 		MSG="Generating [$DESKTOP_IN]"
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
 	fi
-	cat<<EOF>>"$DESKTOP_IN"
+	local DESKTOP_IN_FILE="
 [Desktop Entry]
 Version=1.0
 Encoding=UTF-8
@@ -239,7 +247,8 @@ Terminal=false
 Type=Application
 StartupNotify=true
 Categories=GNOME;GTK;Utility;
-EOF
+"
+	echo -e "$DESKTOP_IN_FILE" > "$DESKTOP_IN"
     if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$DESKTOP_IN]"
 	fi
@@ -294,7 +303,7 @@ function __gen_makefile_am() {
 		MSG="Generating [$MAKEFILE_AM]"
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
 	fi
-	cat<<EOF>>"$MAKEFILE_AM"
+	local MAKEFILE_AM_FILE="
 #
 # Powered by $TOOL_FROM_COMPANY 
 # $DATE
@@ -308,7 +317,8 @@ ${VALA_PROJECT[NAME]}_SOURCES = ${VALA_PROJECT[NAME]}.vala
 desktopdir = \$(datadir)/applications
 desktop_DATA = \
 	${VALA_PROJECT[NAME]}.desktop
-EOF
+"
+	echo -e "$MAKEFILE_AM_FILE" > "$MAKEFILE_AM"
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$MAKEFILE_AM]"
 	fi
@@ -363,7 +373,7 @@ function __gen_readme() {
 		MSG="Generating [$README]"
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
 	fi
-	cat<<EOF>>"$README"
+	local README_FILE="
 #
 # Powered by $TOOL_FROM_COMPANY 
 # $DATE
@@ -393,12 +403,12 @@ missing
 Makefile.in
 Makefile
 
-# Running "make" links all the appropriate libraries.
-# Running "make install", installs the application in 
+# Running \"make\" links all the appropriate libraries.
+# Running \"make install\", installs the application in 
 /home/your_username/.local/bin
 # and installs the ${VALA_PROJECT[NAME]}.desktop file in 
 /home/your_username/.local/share/applications
-# You can run the app by typing "${VALA_PROJECT[NAME]}" in the Overview.
+# You can run the app by typing \"${VALA_PROJECT[NAME]}\" in the Overview.
 
 # To uninstall, type:
 
@@ -409,8 +419,8 @@ make uninstall
 make distcheck
 
 # This will create ${VALA_PROJECT[NAME]}-1.0.tar.xz
-
-EOF
+"
+	echo -e "$README_FILE" > "$README"
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$README]"
 	fi
@@ -465,7 +475,7 @@ function __gen_vala_code() {
 		MSG="Generating [$VALA_CODE]"
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
 	fi
-	cat<<EOF>>"$VALA_CODE"
+	local VALA_CODE_FILE="
 /**
  * Automatic generated ${VALA_PROJECT[NAME]}.vala
  * Powered by $TOOL_FROM_COMPANY 
@@ -475,9 +485,9 @@ function __gen_vala_code() {
 public class ${VALA_PROJECT[NAME]} : Gtk.Application {
     protected override void activate () {
         var window = new Gtk.ApplicationWindow (this);
-        var label = new Gtk.Label ("Simple test!");
+        var label = new Gtk.Label (\"Simple test!\");
         window.add (label);
-        window.set_title ("Welcome to GNOME");
+        window.set_title (\"Welcome to GNOME\");
         window.set_default_size (200, 100);
         window.show_all ();
     }
@@ -486,8 +496,8 @@ public class ${VALA_PROJECT[NAME]} : Gtk.Application {
 public int main (string[] args) {
     return new ${VALA_PROJECT[NAME]} ().run (args);
 }
-
-EOF
+"
+	echo -e "$VALA_CODE_FILE" > "$VALA_CODE"
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$VALA_CODE]"
 	fi
@@ -506,9 +516,9 @@ EOF
 # @brief   Main function 
 # @param   None
 # @exitval Function __valagen exit with integer value
-#			0   - success operation 
-#			128 - missing argument
-#			129 - wrong argument (check dir)
+#			0   - tool finished with success operation
+#			128 - missing argument(s) from cli 
+#			129 - provided wrong argument (check dir)
 #
 # @usage
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -589,10 +599,10 @@ function __valagen() {
 # @brief   Main entry point
 # @params  Values required project name, project path and comment
 # @exitval Script tool valagen exit with integer value
-#			0   - success operation 
-#			127 - run as root user
-#			128 - missing argument
-#			129 - wrong argument (check dir)
+#			0   - tool finished with success operation 
+#			127 - run tool script as root user from cli
+#			128 - missing argument(s) from cli 
+#			129 - provided wrong argument (check dir)
 #
 VALA_PROJECT[NAME]="$1"
 VALA_PROJECT[PATH]="$2"
@@ -606,3 +616,4 @@ if [ "$STATUS" -eq "$SUCCESS" ]; then
 fi
 
 exit 127
+
