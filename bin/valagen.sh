@@ -11,11 +11,13 @@ UTIL_VERSION=ver.1.0
 UTIL=$UTIL_ROOT/sh-util-srv/$UTIL_VERSION
 UTIL_LOG=$UTIL/log
 
+. $UTIL/bin/devel.sh
+. $UTIL/bin/usage.sh
 . $UTIL/bin/checkroot.sh
+. $UTIL/bin/logging.sh
 . $UTIL/bin/loadconf.sh
 . $UTIL/bin/loadutilconf.sh
-. $UTIL/bin/usage.sh
-. $UTIL/bin/devel.sh
+. $UTIL/bin/progressbar.sh
 
 VALAGEN_TOOL=valagen
 VALAGEN_VERSION=ver.1.0
@@ -25,19 +27,25 @@ VALAGEN_UTIL_CFG=$VALAGEN_HOME/conf/${VALAGEN_TOOL}_util.cfg
 VALAGEN_LOG=$VALAGEN_HOME/log
 
 declare -A VALAGEN_USAGE=(
-	[TOOL_NAME]="__$VALAGEN_TOOL"
-	[ARG1]="[PROJECT_NAME] Name of project"
-	[ARG2]="[PROJECT_PATH] Project root folder"
-	[ARG3]="[COMMENT]      Short description"
-	[EX-PRE]="# Generating vala project"
-	[EX]="__$VALAGEN_TOOL ftool /opt/ \"Font generator\""
+	[USAGE_TOOL]="__$VALAGEN_TOOL"
+	[USAGE_ARG1]="[PROJECT_NAME] Name of project"
+	[USAGE_ARG2]="[PROJECT_PATH] Project root folder"
+	[USAGE_ARG3]="[COMMENT]      Short description"
+	[USAGE_EX_PRE]="# Generating vala project"
+	[USAGE_EX]="__$VALAGEN_TOOL ftool /opt/ \"Font generator\""
 )
 
-declare -A LOG=(
-	[TOOL]="$VALAGEN_TOOL"
-	[FLAG]="info"
-	[PATH]="$VALAGEN_LOG"
-	[MSG]=""
+declare -A VALAGEN_LOG=(
+	[LOG_TOOL]="$VALAGEN_TOOL"
+	[LOG_FLAG]="info"
+	[LOG_PATH]="$VALAGEN_LOG"
+	[LOG_MSGE]="None"
+)
+
+declare -A PB_STRUCTURE=(
+	[BAR_WIDTH]=50
+	[MAX_PERCENT]=100
+	[SLEEP]=0.01
 )
 
 TOOL_DBG="false"
@@ -65,7 +73,7 @@ declare -A VALA_PROJECT=(
 # __gen_autogen_sh
 # local STATUS=$?
 #
-# if [ "$STATUS" -eq "$SUCCESS" ]; then
+# if [ $STATUS -eq $SUCCESS ]; then
 #   # true
 #   # notify admin | user
 # else
@@ -77,7 +85,7 @@ declare -A VALA_PROJECT=(
 #
 function __gen_autogen_sh() {
 	local FUNC=${FUNCNAME[0]}
-	local MSG=""
+	local MSG="None"
 	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
 	local AUTOGEN_SH="$PROJECT_HOME/${VALA_PROJECT[AUTOGEN]}"
 	if [ "$TOOL_DBG" == "true" ]; then
@@ -88,9 +96,9 @@ function __gen_autogen_sh() {
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $AUTOGEN_SH already exist"
 		if [ "${configossl[LOGGING]}" == "true" ]; then
-			LOG[MSG]=$MSG
-			LOG[FLAG]="error"
-			__logging $LOG
+			VALAGEN_LOG[LOG_MSGE]=$MSG
+			VALAGEN_LOG[LOG_FLAG]="error"
+			__logging VALAGEN_LOG
 		fi
         return $NOT_SUCCESS
     fi
@@ -121,7 +129,7 @@ fi
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$AUTOGEN_SH]"
 	fi
-	chown "${USER}.${GROUP}" "$AUTOGEN_SH"
+	eval "chown ${USER}.${GROUP} $AUTOGEN_SH"
     if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$AUTOGEN_SH]"
 	fi
@@ -131,9 +139,9 @@ fi
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $AUTOGEN_SH"
 	if [ "${configossl[LOGGING]}" == "true" ]; then
-		LOG[MSG]=$MSG
-		LOG[FLAG]="info"
-		__logging $LOG
+		VALAGEN_LOG[LOG_MSGE]=$MSG
+		VALAGEN_LOG[LOG_FLAG]="info"
+		__logging VALAGEN_LOG
 	fi
     return $SUCCESS
 }
@@ -149,7 +157,7 @@ fi
 # __gen_configure_ac
 # local STATUS=$?
 #
-# if [ "$STATUS" -eq "$SUCCESS" ]; then
+# if [ $STATUS -eq $SUCCESS ]; then
 #   # true
 #   # notify admin | user
 # else
@@ -161,7 +169,7 @@ fi
 #
 function __gen_configure_ac() {
 	local FUNC=${FUNCNAME[0]}
-	local MSG=""
+	local MSG="None"
 	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
 	local CONFIGURE_AC="$PROJECT_HOME/${VALA_PROJECT[CONFIG]}"
 	if [ "$TOOL_DBG" == "true" ]; then
@@ -172,9 +180,9 @@ function __gen_configure_ac() {
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $CONFIGURE_AC already exist"
 		if [ "${configossl[LOGGING]}" == "true" ]; then
-			LOG[MSG]=$MSG
-			LOG[FLAG]="error"
-			__logging $LOG
+			VALAGEN_LOG[LOG_MSGE]=$MSG
+			VALAGEN_LOG[LOG_FLAG]="error"
+			__logging VALAGEN_LOG
 		fi
         return $NOT_SUCCESS
     fi
@@ -202,7 +210,7 @@ AC_OUTPUT
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$CONFIGURE_AC]"
 	fi
-	chown "${USER}.${GROUP}" "$CONFIGURE_AC"
+	eval "chown ${USER}.${GROUP} $CONFIGURE_AC"
 	if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$CONFIGURE_AC]"
 	fi
@@ -212,9 +220,9 @@ AC_OUTPUT
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $CONFIGURE_AC"
 	if [ "${configossl[LOGGING]}" == "true" ]; then
-		LOG[MSG]=$MSG
-		LOG[FLAG]="info"
-		__logging $LOG
+		VALAGEN_LOG[LOG_MSGE]=$MSG
+		VALAGEN_LOG[LOG_FLAG]="info"
+		__logging VALAGEN_LOG
 	fi
     return $SUCCESS
 }
@@ -230,7 +238,7 @@ AC_OUTPUT
 # __gen_desktop_in
 # local STATUS=$?
 #
-# if [ "$STATUS" -eq "$SUCCESS" ]; then
+# if [ $STATUS -eq $SUCCESS ]; then
 #   # true
 #   # notify admin | user
 # else
@@ -242,7 +250,7 @@ AC_OUTPUT
 #
 function __gen_desktop_in() {
 	local FUNC=${FUNCNAME[0]}
-	local MSG=""
+	local MSG="None"
 	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
 	local DESKTOP_IN="$PROJECT_HOME/${VALA_PROJECT[DESKTOP]}"
 	if [ "$TOOL_DBG" == "true" ]; then
@@ -253,9 +261,9 @@ function __gen_desktop_in() {
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $DESKTOP_IN already exist"
 		if [ "${configossl[LOGGING]}" == "true" ]; then
-			LOG[MSG]=$MSG
-			LOG[FLAG]="error"
-			__logging $LOG
+			VALAGEN_LOG[LOG_MSGE]=$MSG
+			VALAGEN_LOG[LOG_FLAG]="error"
+			__logging VALAGEN_LOG
 		fi
         return $NOT_SUCCESS
     fi
@@ -282,7 +290,7 @@ Categories=GNOME;GTK;Utility;
     if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$DESKTOP_IN]"
 	fi
-	chown "${USER}.${GROUP}" "$DESKTOP_IN"
+	eval "chown ${USER}.${GROUP} $DESKTOP_IN"
 	if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$DESKTOP_IN]"
 	fi
@@ -292,9 +300,9 @@ Categories=GNOME;GTK;Utility;
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $DESKTOP_IN"
 	if [ "${configossl[LOGGING]}" == "true" ]; then
-		LOG[MSG]=$MSG
-		LOG[FLAG]="info"
-		__logging $LOG
+		VALAGEN_LOG[LOG_MSGE]=$MSG
+		VALAGEN_LOG[LOG_FLAG]="info"
+		__logging VALAGEN_LOG
 	fi
     return $SUCCESS
 }
@@ -310,7 +318,7 @@ Categories=GNOME;GTK;Utility;
 # __gen_makefile_am
 # local STATUS=$?
 #
-# if [ "$STATUS" -eq "$SUCCESS" ]; then
+# if [ $STATUS -eq $SUCCESS ]; then
 #   # true
 #   # notify admin | user
 # else
@@ -322,7 +330,7 @@ Categories=GNOME;GTK;Utility;
 #
 function __gen_makefile_am() {
 	local FUNC=${FUNCNAME[0]}
-	local MSG=""
+	local MSG="None"
 	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
 	local MAKEFILE_AM="$PROJECT_HOME/${VALA_PROJECT[MAKE]}"
 	if [ "$TOOL_DBG" == "true" ]; then
@@ -333,9 +341,9 @@ function __gen_makefile_am() {
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $MAKEFILE_AM already exist"
 		if [ "${configossl[LOGGING]}" == "true" ]; then
-			LOG[MSG]=$MSG
-			LOG[FLAG]="error"
-			__logging $LOG
+			VALAGEN_LOG[LOG_MSGE]=$MSG
+			VALAGEN_LOG[LOG_FLAG]="error"
+			__logging VALAGEN_LOG
 		fi
         return $NOT_SUCCESS
     fi
@@ -364,7 +372,7 @@ desktop_DATA = \
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$MAKEFILE_AM]"
 	fi
-	chown "${USER}.${GROUP}" "$MAKEFILE_AM"
+	eval "chown ${USER}.${GROUP} $MAKEFILE_AM"
 	if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$MAKEFILE_AM]"
 	fi
@@ -374,9 +382,9 @@ desktop_DATA = \
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $MAKEFILE_AM"
 	if [ "${configossl[LOGGING]}" == "true" ]; then
-		LOG[MSG]=$MSG
-		LOG[FLAG]="info"
-		__logging $LOG
+		VALAGEN_LOG[LOG_MSGE]=$MSG
+		VALAGEN_LOG[LOG_FLAG]="info"
+		__logging VALAGEN_LOG
 	fi
     return $SUCCESS
 }
@@ -392,7 +400,7 @@ desktop_DATA = \
 # __gen_readme 
 # local STATUS=$?
 #
-# if [ "$STATUS" -eq "$SUCCESS" ]; then
+# if [ $STATUS -eq $SUCCESS ]; then
 #   # true
 #   # notify admin | user
 # else
@@ -404,7 +412,7 @@ desktop_DATA = \
 #
 function __gen_readme() {
 	local FUNC=${FUNCNAME[0]}
-	local MSG=""
+	local MSG="None"
 	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
 	local README="$PROJECT_HOME/${VALA_PROJECT[README]}"
 	if [ "$TOOL_DBG" == "true" ]; then
@@ -415,9 +423,9 @@ function __gen_readme() {
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $README already exist"
 		if [ "${configossl[LOGGING]}" == "true" ]; then
-			LOG[MSG]=$MSG
-			LOG[FLAG]="info"
-			__logging $LOG
+			VALAGEN_LOG[LOG_MSGE]=$MSG
+			VALAGEN_LOG[LOG_FLAG]="info"
+			__logging VALAGEN_LOG
 		fi
         return $NOT_SUCCESS
     fi
@@ -478,7 +486,7 @@ make distcheck
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$README]"
 	fi
-	chown "${USER}.${GROUP}" "$README"
+	eval "chown ${USER}.${GROUP} $README"
 	if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$README]"
 	fi
@@ -488,9 +496,9 @@ make distcheck
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $README"
 	if [ "${configossl[LOGGING]}" == "true" ]; then
-		LOG[MSG]=$MSG
-		LOG[FLAG]="info"
-		__logging $LOG
+		VALAGEN_LOG[LOG_MSGE]=$MSG
+		VALAGEN_LOG[LOG_FLAG]="info"
+		__logging VALAGEN_LOG
 	fi
     return $SUCCESS
 }
@@ -506,7 +514,7 @@ make distcheck
 # __gen_vala_code 
 # local STATUS=$?
 #
-# if [ "$STATUS" -eq "$SUCCESS" ]; then
+# if [ $STATUS -eq $SUCCESS ]; then
 #   # true
 #   # notify admin | user
 # else
@@ -518,7 +526,7 @@ make distcheck
 #
 function __gen_vala_code() {
 	local FUNC=${FUNCNAME[0]}
-	local MSG=""
+	local MSG="None"
 	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
 	local VALA_CODE="$PROJECT_HOME/${VALA_PROJECT[CODE]}"
 	if [ "$TOOL_DBG" == "true" ]; then
@@ -529,9 +537,9 @@ function __gen_vala_code() {
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $VALA_CODE already exist"
 		if [ "${configossl[LOGGING]}" == "true" ]; then
-			LOG[MSG]=$MSG
-			LOG[FLAG]="error"
-			__logging $LOG
+			VALAGEN_LOG[LOG_MSGE]=$MSG
+			VALAGEN_LOG[LOG_FLAG]="error"
+			__logging VALAGEN_LOG
 		fi
         return $NOT_SUCCESS
     fi
@@ -567,7 +575,7 @@ public int main (string[] args) {
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$VALA_CODE]"
 	fi
-	chown "${USER}.${GROUP}" "$VALA_CODE"
+	eval "chown ${USER}.${GROUP} $VALA_CODE"
 	if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$VALA_CODE]"
 	fi
@@ -577,9 +585,9 @@ public int main (string[] args) {
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $VALA_CODE"
 	if [ "${configossl[LOGGING]}" == "true" ]; then
-		LOG[MSG]=$MSG
-		LOG[FLAG]="info"
-		__logging $LOG
+		VALAGEN_LOG[LOG_MSGE]=$MSG
+		VALAGEN_LOG[LOG_FLAG]="info"
+		__logging VALAGEN_LOG
 	fi
     return $SUCCESS
 }
@@ -599,77 +607,86 @@ public int main (string[] args) {
 #
 function __valagen() {
 	local FUNC=${FUNCNAME[0]}
-	local MSG=""
-	if [ "${VALA_PROJECT[NAME]}" != "none" ] && 
-	   [ "${VALA_PROJECT[PATH]}" != "none" ] &&
-	   [ "${VALA_PROJECT[COMMENT]}" != "none" ]; then
-	   	if [ "$TOOL_DBG" == "true" ]; then
-			MSG="Checking dir [${VALA_PROJECT[PATH]}/]"
-			printf "$DQUE" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	   	fi
-		if [ -d "${VALA_PROJECT[PATH]}/" ]; then
-			printf "%s\n" "[ok]"
-			local ROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
-			if [ "$TOOL_DBG" == "true" ]; then
-				MSG="Creating dir [$PROJECT_HOME]"
-				printf "$DSTA" "$UTIL_ADDNEWTOOL" "$FUNC" "$MSG"
+	local MSG="None"
+	if [ "${VALA_PROJECT[NAME]}" != "None" ] && 
+	   [ "${VALA_PROJECT[PATH]}" != "None" ] &&
+	   [ "${VALA_PROJECT[COMMENT]}" != "None" ]; then
+		if [ -n "${VALA_PROJECT[NAME]}" ] &&
+		   [ -n "${VALA_PROJECT[PATH]}" ] &&
+           [ -n "${VALA_PROJECT[COMMENT]}" ]; then
+			MSG="Generating new Vala project [${VALA_PROJECT[NAME]}]"
+			if [ "${configossl[LOGGING]}" == "true" ]; then
+				VALAGEN_LOG[LOG_MSGE]=$MSG
+				VALAGEN_LOG[LOG_FLAG]="info"
+				__logging VALAGEN_LOG
 			fi
-			mkdir "$PROJECT_HOME/"
-			if [ "$TOOL_DBG" == "true" ]; then
-				MSG="Set owner [$PROJECT_HOME/]"
-				printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-			fi
-			chown "${USER}.${GROUP}" "$PROJECT_HOME/"
-			if [ "$TOOL_DBG" == "true" ]; then
-				MSG="Set permission [$PROJECT_HOME/]"
-				printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-			fi
-			chmod 700 "$PROJECT_HOME/"
-			__gen_autogen_sh
-			local STATUS=$?
-			if [ "$STATUS" -eq "$SUCCESS" ]; then
-				__gen_configure_ac
-				STATUS=$?
-				if [ "$STATUS" -eq "$SUCCESS" ]; then
-					__gen_desktop_in
+		   	if [ "$TOOL_DBG" == "true" ]; then
+				MSG="Checking dir [${VALA_PROJECT[PATH]}/]"
+				printf "$DQUE" "$VALAGEN_TOOL" "$FUNC" "$MSG"
+		   	fi
+			if [ -d "${VALA_PROJECT[PATH]}/" ]; then
+				printf "%s\n" "[ok]"
+				local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
+				if [ "$TOOL_DBG" == "true" ]; then
+					MSG="Creating dir [$PROJECT_HOME]"
+					printf "$DSTA" "$UTIL_ADDNEWTOOL" "$FUNC" "$MSG"
+				fi
+				mkdir "$PROJECT_HOME/"
+				if [ "$TOOL_DBG" == "true" ]; then
+					MSG="Set owner [$PROJECT_HOME/]"
+					printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
+				fi
+				eval "chown ${USER}.${GROUP} $PROJECT_HOME/"
+				if [ "$TOOL_DBG" == "true" ]; then
+					MSG="Set permission [$PROJECT_HOME/]"
+					printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
+				fi
+				chmod 700 "$PROJECT_HOME/"
+				__gen_autogen_sh
+				local STATUS=$?
+				if [ $STATUS -eq $SUCCESS ]; then
+					__gen_configure_ac
 					STATUS=$?
-					if [ "$STATUS" -eq "$SUCCESS" ]; then
-						__gen_makefile_am
+					if [ $STATUS -eq $SUCCESS ]; then
+						__gen_desktop_in
 						STATUS=$?
-						if [ "$STATUS" -eq "$SUCCESS" ]; then
-							__gen_readme
+						if [ $STATUS -eq $SUCCESS ]; then
+							__gen_makefile_am
 							STATUS=$?
-							if [ "$STATUS" -eq "$SUCCESS" ]; then
-								VALA_PROJECT[CODE]="${VALA_PROJECT[NAME]}.vala"
-								__gen_vala_code
+							if [ $STATUS -eq $SUCCESS ]; then
+								__gen_readme
 								STATUS=$?
-								if [ "$STATUS" -eq "$SUCCESS" ]; then
-									if [ "$TOOL_DBG" == "true" ]; then
-										MSG="Done"
-										printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "$MSG"
+								if [ $STATUS -eq $SUCCESS ]; then
+									VALA_PROJECT[CODE]="${VALA_PROJECT[NAME]}.vala"
+									__gen_vala_code
+									STATUS=$?
+									if [ $STATUS -eq $SUCCESS ]; then
+										if [ "$TOOL_DBG" == "true" ]; then
+											printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
+										fi
+										exit 0
 									fi
-									exit 0
 								fi
 							fi
 						fi
 					fi
 				fi
 			fi
+			if [ "$TOOL_DBG" == "true" ]; then
+				printf "%s\n" "[not exist]"
+				MSG="Generate [${VALA_PROJECT[PATH]}/]"
+				printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
+			fi
+			MSG="[$VALA_PROJECT[NAME]] [${VALA_PROJECT[PATH]}/ does not exist"
+			if [ "${configossl[LOGGING]}" == "true" ]; then
+				VALAGEN_LOG[MSG]=$MSG
+				VALAGEN_LOG[FLAG]="error"
+				__logging VALAGEN_LOG
+			fi
+			exit 129
 		fi
-		if [ "$TOOL_DBG" == "true" ]; then
-			printf "%s\n" "[not exist]"
-			MSG="Generate [${VALA_PROJECT[PATH]}/]"
-			printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-		fi
-		MSG="[$VALA_PROJECT[NAME]] [${VALA_PROJECT[PATH]}/ does not exist"
-		if [ "${configossl[LOGGING]}" == "true" ]; then
-			LOG[MSG]=$MSG
-			LOG[FLAG]="error"
-			__logging $LOG
-		fi
-		exit 129
 	fi
-	__usage $VALAGEN_USAGE
+	__usage VALAGEN_USAGE
 	exit 128
 }
 
