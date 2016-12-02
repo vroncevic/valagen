@@ -95,7 +95,7 @@ function __gen_autogen_sh() {
     if [ -f "$AUTOGEN_SH" ]; then
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $AUTOGEN_SH already exist"
-		if [ "${configossl[LOGGING]}" == "true" ]; then
+		if [ "${configvalagen[LOGGING]}" == "true" ]; then
 			VALAGEN_LOG[LOG_MSGE]=$MSG
 			VALAGEN_LOG[LOG_FLAG]="error"
 			__logging VALAGEN_LOG
@@ -129,7 +129,9 @@ fi
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$AUTOGEN_SH]"
 	fi
-	eval "chown ${USER}.${GROUP} $AUTOGEN_SH"
+	local PRFX_CMD="chown"
+	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
+	eval "$PRFX_CMD $OWNER $AUTOGEN_SH"
     if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$AUTOGEN_SH]"
 	fi
@@ -138,7 +140,7 @@ fi
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $AUTOGEN_SH"
-	if [ "${configossl[LOGGING]}" == "true" ]; then
+	if [ "${configvalagen[LOGGING]}" == "true" ]; then
 		VALAGEN_LOG[LOG_MSGE]=$MSG
 		VALAGEN_LOG[LOG_FLAG]="info"
 		__logging VALAGEN_LOG
@@ -179,7 +181,7 @@ function __gen_configure_ac() {
     if [ -f "$CONFIGURE_AC" ]; then
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $CONFIGURE_AC already exist"
-		if [ "${configossl[LOGGING]}" == "true" ]; then
+		if [ "${configvalagen[LOGGING]}" == "true" ]; then
 			VALAGEN_LOG[LOG_MSGE]=$MSG
 			VALAGEN_LOG[LOG_FLAG]="error"
 			__logging VALAGEN_LOG
@@ -210,7 +212,9 @@ AC_OUTPUT
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$CONFIGURE_AC]"
 	fi
-	eval "chown ${USER}.${GROUP} $CONFIGURE_AC"
+	local PRFX_CMD="chown"
+	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
+	eval "$PRFX_CMD $OWNER $CONFIGURE_AC"
 	if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$CONFIGURE_AC]"
 	fi
@@ -219,7 +223,7 @@ AC_OUTPUT
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $CONFIGURE_AC"
-	if [ "${configossl[LOGGING]}" == "true" ]; then
+	if [ "${configvalagen[LOGGING]}" == "true" ]; then
 		VALAGEN_LOG[LOG_MSGE]=$MSG
 		VALAGEN_LOG[LOG_FLAG]="info"
 		__logging VALAGEN_LOG
@@ -260,7 +264,7 @@ function __gen_desktop_in() {
     if [ -f "$DESKTOP_IN" ]; then
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $DESKTOP_IN already exist"
-		if [ "${configossl[LOGGING]}" == "true" ]; then
+		if [ "${configvalagen[LOGGING]}" == "true" ]; then
 			VALAGEN_LOG[LOG_MSGE]=$MSG
 			VALAGEN_LOG[LOG_FLAG]="error"
 			__logging VALAGEN_LOG
@@ -290,7 +294,9 @@ Categories=GNOME;GTK;Utility;
     if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$DESKTOP_IN]"
 	fi
-	eval "chown ${USER}.${GROUP} $DESKTOP_IN"
+	local PRFX_CMD="chown"
+	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
+	eval "$PRFX_CMD $OWNER $DESKTOP_IN"
 	if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$DESKTOP_IN]"
 	fi
@@ -299,7 +305,7 @@ Categories=GNOME;GTK;Utility;
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $DESKTOP_IN"
-	if [ "${configossl[LOGGING]}" == "true" ]; then
+	if [ "${configvalagen[LOGGING]}" == "true" ]; then
 		VALAGEN_LOG[LOG_MSGE]=$MSG
 		VALAGEN_LOG[LOG_FLAG]="info"
 		__logging VALAGEN_LOG
@@ -340,7 +346,7 @@ function __gen_makefile_am() {
     if [ -f "$MAKEFILE_AM" ]; then
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $MAKEFILE_AM already exist"
-		if [ "${configossl[LOGGING]}" == "true" ]; then
+		if [ "${configvalagen[LOGGING]}" == "true" ]; then
 			VALAGEN_LOG[LOG_MSGE]=$MSG
 			VALAGEN_LOG[LOG_FLAG]="error"
 			__logging VALAGEN_LOG
@@ -372,7 +378,9 @@ desktop_DATA = \
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$MAKEFILE_AM]"
 	fi
-	eval "chown ${USER}.${GROUP} $MAKEFILE_AM"
+	local PRFX_CMD="chown"
+	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
+	eval "$PRFX_CMD $OWNER $MAKEFILE_AM"
 	if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$MAKEFILE_AM]"
 	fi
@@ -381,7 +389,7 @@ desktop_DATA = \
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $MAKEFILE_AM"
-	if [ "${configossl[LOGGING]}" == "true" ]; then
+	if [ "${configvalagen[LOGGING]}" == "true" ]; then
 		VALAGEN_LOG[LOG_MSGE]=$MSG
 		VALAGEN_LOG[LOG_FLAG]="info"
 		__logging VALAGEN_LOG
@@ -422,7 +430,7 @@ function __gen_readme() {
     if [ -f "$README" ]; then
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $README already exist"
-		if [ "${configossl[LOGGING]}" == "true" ]; then
+		if [ "${configvalagen[LOGGING]}" == "true" ]; then
 			VALAGEN_LOG[LOG_MSGE]=$MSG
 			VALAGEN_LOG[LOG_FLAG]="info"
 			__logging VALAGEN_LOG
@@ -486,7 +494,9 @@ make distcheck
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$README]"
 	fi
-	eval "chown ${USER}.${GROUP} $README"
+	local PRFX_CMD="chown"
+	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
+	eval "$PRFX_CMD $OWNER $README"
 	if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$README]"
 	fi
@@ -495,7 +505,7 @@ make distcheck
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $README"
-	if [ "${configossl[LOGGING]}" == "true" ]; then
+	if [ "${configvalagen[LOGGING]}" == "true" ]; then
 		VALAGEN_LOG[LOG_MSGE]=$MSG
 		VALAGEN_LOG[LOG_FLAG]="info"
 		__logging VALAGEN_LOG
@@ -536,7 +546,7 @@ function __gen_vala_code() {
     if [ -f "$VALA_CODE" ]; then
         printf "%s\n" "[already exist]"
 		MSG="[$VALA_PROJECT[NAME]] $VALA_CODE already exist"
-		if [ "${configossl[LOGGING]}" == "true" ]; then
+		if [ "${configvalagen[LOGGING]}" == "true" ]; then
 			VALAGEN_LOG[LOG_MSGE]=$MSG
 			VALAGEN_LOG[LOG_FLAG]="error"
 			__logging VALAGEN_LOG
@@ -575,7 +585,9 @@ public int main (string[] args) {
 	if [ "$TOOL_DBG" == "true" ]; then
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$VALA_CODE]"
 	fi
-	eval "chown ${USER}.${GROUP} $VALA_CODE"
+	local PRFX_CMD="chown"
+	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
+	eval "$PRFX_CMD $OWNER $VALA_CODE"
 	if [ "$TOOL_DBG" == "true" ]; then            
 		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$VALA_CODE]"
 	fi
@@ -584,7 +596,7 @@ public int main (string[] args) {
 		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
 	fi
 	MSG="[$VALA_PROJECT[NAME]] Generated $VALA_CODE"
-	if [ "${configossl[LOGGING]}" == "true" ]; then
+	if [ "${configvalagen[LOGGING]}" == "true" ]; then
 		VALAGEN_LOG[LOG_MSGE]=$MSG
 		VALAGEN_LOG[LOG_FLAG]="info"
 		__logging VALAGEN_LOG
@@ -596,9 +608,11 @@ public int main (string[] args) {
 # @brief   Main function 
 # @param   None
 # @exitval Function __valagen exit with integer value
-#			0   - tool finished with success operation
+#			0   - tool finished with success operation 
 #			128 - missing argument(s) from cli 
 #			129 - provided wrong argument (check dir)
+#			130 - failed to load tool script configuration from file 
+#			131 - failed to load tool script utilities configuration from file
 #
 # @usage
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -614,8 +628,36 @@ function __valagen() {
 		if [ -n "${VALA_PROJECT[NAME]}" ] &&
 		   [ -n "${VALA_PROJECT[PATH]}" ] &&
            [ -n "${VALA_PROJECT[COMMENT]}" ]; then
+			MSG="Loading basic and util configuration"
+			printf "$SEND" "$VALAGEN_TOOL" "$MSG"
+			__progressbar PB_STRUCTURE
+			printf "%s\n\n" ""
+			declare -A configvalagen=()
+			__loadconf $VALAGEN_CFG configvalagen
+			local STATUS=$?
+			if [ $STATUS -eq $NOT_SUCCESS ]; then
+				MSG="Failed to load tool script configuration"
+				if [ "$TOOL_DBG" == "true" ]; then
+					printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
+				else
+					printf "$SEND" "$VALAGEN_TOOL" "$MSG"
+				fi
+				exit 130
+			fi
+			declare -A configvalagenutil=()
+			__loadutilconf $VALAGEN_UTIL_CFG configvalagenutil
+			STATUS=$?
+			if [ $STATUS -eq $NOT_SUCCESS ]; then
+				MSG="Failed to load tool script utilities configuration"
+				if [ "$TOOL_DBG" == "true" ]; then
+					printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
+				else
+					printf "$SEND" "$VALAGEN_TOOL" "$MSG"
+				fi
+				exit 131
+			fi
 			MSG="Generating new Vala project [${VALA_PROJECT[NAME]}]"
-			if [ "${configossl[LOGGING]}" == "true" ]; then
+			if [ "${configvalagen[LOGGING]}" == "true" ]; then
 				VALAGEN_LOG[LOG_MSGE]=$MSG
 				VALAGEN_LOG[LOG_FLAG]="info"
 				__logging VALAGEN_LOG
@@ -636,7 +678,9 @@ function __valagen() {
 					MSG="Set owner [$PROJECT_HOME/]"
 					printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
 				fi
-				eval "chown ${USER}.${GROUP} $PROJECT_HOME/"
+				local PRFX_CMD="chown"
+				local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
+				eval "$PRFX_CMD $OWNER $PROJECT_HOME/"
 				if [ "$TOOL_DBG" == "true" ]; then
 					MSG="Set permission [$PROJECT_HOME/]"
 					printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
@@ -678,7 +722,7 @@ function __valagen() {
 				printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
 			fi
 			MSG="[$VALA_PROJECT[NAME]] [${VALA_PROJECT[PATH]}/ does not exist"
-			if [ "${configossl[LOGGING]}" == "true" ]; then
+			if [ "${configvalagen[LOGGING]}" == "true" ]; then
 				VALAGEN_LOG[MSG]=$MSG
 				VALAGEN_LOG[FLAG]="error"
 				__logging VALAGEN_LOG
@@ -698,6 +742,8 @@ function __valagen() {
 #			127 - run tool script as root user from cli
 #			128 - missing argument(s) from cli 
 #			129 - provided wrong argument (check dir)
+#			130 - failed to load tool script configuration from file 
+#			131 - failed to load tool script utilities configuration from file
 #
 VALA_PROJECT[NAME]="$1"
 VALA_PROJECT[PATH]="$2"
@@ -706,7 +752,7 @@ VALA_PROJECT[COMMENT]="$3"
 printf "\n%s\n%s\n\n" "$VALAGEN_TOOL $VALAGEN_VERSION" "`date`"
 __checkroot
 STATUS=$?
-if [ "$STATUS" -eq "$SUCCESS" ]; then
+if [ $STATUS -eq $SUCCESS ]; then
 	__valagen
 fi
 
