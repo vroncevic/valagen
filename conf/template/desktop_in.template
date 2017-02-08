@@ -1,0 +1,12 @@
+"[Desktop Entry]"
+"Version=1.0"
+"Encoding=UTF-8"
+"Name=${VPROJECT[NAME]}"
+"Comment=${VPROJECT[COMMENT]}"
+"Exec=@prefix@/bin/${VPROJECT[NAME]}"
+"Icon=application-default-icon"
+"Terminal=false"
+"Type=Application"
+"StartupNotify=true"
+"Categories=GNOME;GTK;Utility;"
+

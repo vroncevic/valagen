@@ -1,4 +1,4 @@
-Project generator for Vala project (Bash scripts).
+Generating Vala Project (Bash script).
 ================================================================================
 
 The README is used to introduce the tool and provide instructions on
@@ -20,11 +20,11 @@ DEPENDENCIES
 
 This tool requires these other modules and libraries:
 
-	sh-util https://github.com/vroncevic/sh-util
+	sh_util https://github.com/vroncevic/sh_util
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2016 by https://github.com/vroncevic/valagen
+Copyright (C) 2017 by https://github.com/vroncevic/valagen
 
 This tool is free software; you can redistribute it and/or modify
 it under the same terms as Bash itself, either Bash version 4.2.47 or,

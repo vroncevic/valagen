@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# @brief   Vala project generator
+# @brief   Generate Vala Project
 # @version ver.1.0
 # @date    Thu Jan 14 22:26:32 2016
 # @company Frobas IT Department, www.frobas.com 2016
@@ -8,727 +8,208 @@
 #
 UTIL_ROOT=/root/scripts
 UTIL_VERSION=ver.1.0
-UTIL=$UTIL_ROOT/sh-util-srv/$UTIL_VERSION
-UTIL_LOG=$UTIL/log
+UTIL=${UTIL_ROOT}/sh_util/${UTIL_VERSION}
+UTIL_LOG=${UTIL}/log
 
-. $UTIL/bin/devel.sh
-. $UTIL/bin/usage.sh
-. $UTIL/bin/checkroot.sh
-. $UTIL/bin/logging.sh
-. $UTIL/bin/loadconf.sh
-. $UTIL/bin/loadutilconf.sh
-. $UTIL/bin/progressbar.sh
+.	${UTIL}/bin/devel.sh
+.	${UTIL}/bin/usage.sh
+.	${UTIL}/bin/check_root.sh
+.	${UTIL}/bin/check_tool.sh
+.	${UTIL}/bin/logging.sh
+.	${UTIL}/bin/load_conf.sh
+.	${UTIL}/bin/load_util_conf.sh
+.	${UTIL}/bin/progress_bar.sh
 
 VALAGEN_TOOL=valagen
 VALAGEN_VERSION=ver.1.0
-VALAGEN_HOME=$UTIL_ROOT/$VALAGEN_TOOL/$VALAGEN_VERSION
-VALAGEN_CFG=$VALAGEN_HOME/conf/$VALAGEN_TOOL.cfg
-VALAGEN_UTIL_CFG=$VALAGEN_HOME/conf/${VALAGEN_TOOL}_util.cfg
-VALAGEN_LOG=$VALAGEN_HOME/log
+VALAGEN_HOME=${UTIL_ROOT}/${VALAGEN_TOOL}/${VALAGEN_VERSION}
+VALAGEN_CFG=${VALAGEN_HOME}/conf/${VALAGEN_TOOL}.cfg
+VALAGEN_UTIL_CFG=${VALAGEN_HOME}/conf/${VALAGEN_TOOL}_util.cfg
+VALAGEN_LOG=${VALAGEN_HOME}/log
 
 declare -A VALAGEN_USAGE=(
-	[USAGE_TOOL]="__$VALAGEN_TOOL"
+	[USAGE_TOOL]="__${VALAGEN_TOOL}"
 	[USAGE_ARG1]="[PROJECT_NAME] Name of project"
 	[USAGE_ARG2]="[PROJECT_PATH] Project root folder"
-	[USAGE_ARG3]="[COMMENT]      Short description"
+	[USAGE_ARG3]="[COMMENT] Short description"
 	[USAGE_EX_PRE]="# Generating vala project"
-	[USAGE_EX]="__$VALAGEN_TOOL ftool /opt/ \"Font generator\""
+	[USAGE_EX]="__${VALAGEN_TOOL} ftool /opt/ \"Font generator\""
 )
 
-declare -A VALAGEN_LOG=(
-	[LOG_TOOL]="$VALAGEN_TOOL"
+declare -A VALAGEN_LOGGING=(
+	[LOG_TOOL]="${VALAGEN_TOOL}"
 	[LOG_FLAG]="info"
-	[LOG_PATH]="$VALAGEN_LOG"
+	[LOG_PATH]="${VALAGEN_LOG}"
 	[LOG_MSGE]="None"
 )
 
 declare -A PB_STRUCTURE=(
-	[BAR_WIDTH]=50
-	[MAX_PERCENT]=100
+	[BW]=50
+	[MP]=100
 	[SLEEP]=0.01
 )
 
 TOOL_DBG="false"
+TOOL_LOG="false"
+TOOL_NOTIFY="false"
 
-declare -A VALA_PROJECT=(
-    [NAME]="none"
-    [PATH]="none"
-    [AUTOGEN]="autogen.sh"
-    [CONFIG]="configure.ac"
-    [DESKTOP]="desktop.in"
-    [MAKE]="Makefile.am"
-    [README]="README"
-    [COMMENT]="none"
-    [CODE]="none"
+declare -A VPROJECT=(
+	[NAME]="None"
+	[PATH]="None"
+	[AUTOGEN]="autogen.sh"
+	[CONFIGURE]="configure.ac"
+	[DESKTOP]="desktop.in"
+	[MAKEFILE]="Makefile.am"
+	[README]="README"
+	[COMMENT]="None"
+	[CODE]="None"
 )
-
-#
-# @brief  Generating autogen.sh file
-# @param  None
-# @retval Success return 0, else 1
-#
-# @usage
-# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#
-# __gen_autogen_sh
-# local STATUS=$?
-#
-# if [ $STATUS -eq $SUCCESS ]; then
-#   # true
-#   # notify admin | user
-# else
-#   # false
-#   # return $NOT_SUCCESS
-#   # or
-#   # exit 128
-# fi
-#
-function __gen_autogen_sh() {
-	local FUNC=${FUNCNAME[0]}
-	local MSG="None"
-	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
-	local AUTOGEN_SH="$PROJECT_HOME/${VALA_PROJECT[AUTOGEN]}"
-	if [ "$TOOL_DBG" == "true" ]; then
-		MSG="Checking [$AUTOGEN_SH]"
-		printf "$DQUE" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-    if [ -f "$AUTOGEN_SH" ]; then
-        printf "%s\n" "[already exist]"
-		MSG="[$VALA_PROJECT[NAME]] $AUTOGEN_SH already exist"
-		if [ "${configvalagen[LOGGING]}" == "true" ]; then
-			VALAGEN_LOG[LOG_MSGE]=$MSG
-			VALAGEN_LOG[LOG_FLAG]="error"
-			__logging VALAGEN_LOG
-		fi
-        return $NOT_SUCCESS
-    fi
-    local DATE=$(date)
-	if [ "$TOOL_DBG" == "true" ]; then
-		printf "%s\n" "[not exist]"
-		MSG="Generating [$AUTOGEN_SH]"
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-	local AUTOGEN_SH_FILE="
-#!/bin/bash
-# Powered by $TOOL_FROM_COMPANY 
-# $DATE
-# Project ${VALA_PROJECT[NAME]}
-#
-set -e
-test -n \"\$srcdir\" || srcdir=\`dirname \"\$0\"\`
-test -n \"\$srcdir\" || srcdir=.
-olddir=\`pwd\`
-cd \"\$srcdir\"
-autoreconf --force --install
-cd \"\$olddir\"
-if test -z \"\$NOCONFIGURE\"; then
-  \"\$srcdir\"/configure \"\$@\"
-fi
-"
-	echo -e "$AUTOGEN_SH_FILE" > "$AUTOGEN_SH"
-	if [ "$TOOL_DBG" == "true" ]; then
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$AUTOGEN_SH]"
-	fi
-	local PRFX_CMD="chown"
-	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
-	eval "$PRFX_CMD $OWNER $AUTOGEN_SH"
-    if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$AUTOGEN_SH]"
-	fi
-    chmod 700 "$AUTOGEN_SH"
-    if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
-	fi
-	MSG="[$VALA_PROJECT[NAME]] Generated $AUTOGEN_SH"
-	if [ "${configvalagen[LOGGING]}" == "true" ]; then
-		VALAGEN_LOG[LOG_MSGE]=$MSG
-		VALAGEN_LOG[LOG_FLAG]="info"
-		__logging VALAGEN_LOG
-	fi
-    return $SUCCESS
-}
-
-#
-# @brief  Generating configure.ac file
-# @param  None
-# @retval Success return 0, else 1
-#
-# @usage
-# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#
-# __gen_configure_ac
-# local STATUS=$?
-#
-# if [ $STATUS -eq $SUCCESS ]; then
-#   # true
-#   # notify admin | user
-# else
-#   # false
-#   # return $NOT_SUCCESS
-#   # or
-#   # exit 128
-# fi
-#
-function __gen_configure_ac() {
-	local FUNC=${FUNCNAME[0]}
-	local MSG="None"
-	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
-	local CONFIGURE_AC="$PROJECT_HOME/${VALA_PROJECT[CONFIG]}"
-	if [ "$TOOL_DBG" == "true" ]; then
-		MSG="Checking [$CONFIGURE_AC]"
-		printf "$DQUE" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-    if [ -f "$CONFIGURE_AC" ]; then
-        printf "%s\n" "[already exist]"
-		MSG="[$VALA_PROJECT[NAME]] $CONFIGURE_AC already exist"
-		if [ "${configvalagen[LOGGING]}" == "true" ]; then
-			VALAGEN_LOG[LOG_MSGE]=$MSG
-			VALAGEN_LOG[LOG_FLAG]="error"
-			__logging VALAGEN_LOG
-		fi
-        return $NOT_SUCCESS
-    fi
-    local DATE=$(date)
-    if [ "$TOOL_DBG" == "true" ]; then
-		printf "%s\n" "[not exist]"
-		MSG="Generating [$CONFIGURE_AC]"
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-	local CONFIGURE_AC_FILE="
-#
-# Powered by $TOOL_FROM_COMPANY 
-# $DATE
-# Project ${VALA_PROJECT[NAME]}
-#
-AC_INIT([${VALA_PROJECT[NAME]}], 1.0)
-AM_INIT_AUTOMAKE([1.10 no-define foreign dist-xz no-dist-gzip])
-AC_PROG_CC
-AM_PROG_VALAC([0.16])
-PKG_CHECK_MODULES(gtk, gtk+-3.0)
-AC_CONFIG_FILES([Makefile ${VALA_PROJECT[NAME]}.desktop])
-AC_OUTPUT
-"
-	echo -e "$CONFIGURE_AC_FILE" > "$CONFIGURE_AC"
-	if [ "$TOOL_DBG" == "true" ]; then
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$CONFIGURE_AC]"
-	fi
-	local PRFX_CMD="chown"
-	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
-	eval "$PRFX_CMD $OWNER $CONFIGURE_AC"
-	if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$CONFIGURE_AC]"
-	fi
-    chmod 700 "$CONFIGURE_AC"
-    if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
-	fi
-	MSG="[$VALA_PROJECT[NAME]] Generated $CONFIGURE_AC"
-	if [ "${configvalagen[LOGGING]}" == "true" ]; then
-		VALAGEN_LOG[LOG_MSGE]=$MSG
-		VALAGEN_LOG[LOG_FLAG]="info"
-		__logging VALAGEN_LOG
-	fi
-    return $SUCCESS
-}
-
-#
-# @brief  Generating app.desktop.in file
-# @param  None
-# @retval Success return 0, else 1
-#
-# @usage
-# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#
-# __gen_desktop_in
-# local STATUS=$?
-#
-# if [ $STATUS -eq $SUCCESS ]; then
-#   # true
-#   # notify admin | user
-# else
-#   # false
-#   # return $NOT_SUCCESS
-#   # or
-#   # exit 128
-# fi
-#
-function __gen_desktop_in() {
-	local FUNC=${FUNCNAME[0]}
-	local MSG="None"
-	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
-	local DESKTOP_IN="$PROJECT_HOME/${VALA_PROJECT[DESKTOP]}"
-	if [ "$TOOL_DBG" == "true" ]; then
-		MSG="Checking [$DESKTOP_IN]"
-		printf "$DQUE" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-    if [ -f "$DESKTOP_IN" ]; then
-        printf "%s\n" "[already exist]"
-		MSG="[$VALA_PROJECT[NAME]] $DESKTOP_IN already exist"
-		if [ "${configvalagen[LOGGING]}" == "true" ]; then
-			VALAGEN_LOG[LOG_MSGE]=$MSG
-			VALAGEN_LOG[LOG_FLAG]="error"
-			__logging VALAGEN_LOG
-		fi
-        return $NOT_SUCCESS
-    fi
-    local DATE=$(date)
-    if [ "$TOOL_DBG" == "true" ]; then
-		printf "%s\n" "[not exist]"
-		MSG="Generating [$DESKTOP_IN]"
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-	local DESKTOP_IN_FILE="
-[Desktop Entry]
-Version=1.0
-Encoding=UTF-8
-Name=${VALA_PROJECT[NAME]}
-Comment=${VALA_PROJECT[COMMENT]}
-Exec=@prefix@/bin/${VALA_PROJECT[NAME]}
-Icon=application-default-icon
-Terminal=false
-Type=Application
-StartupNotify=true
-Categories=GNOME;GTK;Utility;
-"
-	echo -e "$DESKTOP_IN_FILE" > "$DESKTOP_IN"
-    if [ "$TOOL_DBG" == "true" ]; then
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$DESKTOP_IN]"
-	fi
-	local PRFX_CMD="chown"
-	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
-	eval "$PRFX_CMD $OWNER $DESKTOP_IN"
-	if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$DESKTOP_IN]"
-	fi
-    chmod 700 "$DESKTOP_IN"
-    if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
-	fi
-	MSG="[$VALA_PROJECT[NAME]] Generated $DESKTOP_IN"
-	if [ "${configvalagen[LOGGING]}" == "true" ]; then
-		VALAGEN_LOG[LOG_MSGE]=$MSG
-		VALAGEN_LOG[LOG_FLAG]="info"
-		__logging VALAGEN_LOG
-	fi
-    return $SUCCESS
-}
-
-#
-# @brief  Generating Makefile.am file
-# @param  None
-# @retval Success return 0, else 1
-#
-# @usage
-# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#
-# __gen_makefile_am
-# local STATUS=$?
-#
-# if [ $STATUS -eq $SUCCESS ]; then
-#   # true
-#   # notify admin | user
-# else
-#   # false
-#   # return $NOT_SUCCESS
-#   # or
-#   # exit 128
-# fi
-#
-function __gen_makefile_am() {
-	local FUNC=${FUNCNAME[0]}
-	local MSG="None"
-	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
-	local MAKEFILE_AM="$PROJECT_HOME/${VALA_PROJECT[MAKE]}"
-	if [ "$TOOL_DBG" == "true" ]; then
-		MSG="Checking [$MAKEFILE_AM]"
-		printf "$DQUE" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-    if [ -f "$MAKEFILE_AM" ]; then
-        printf "%s\n" "[already exist]"
-		MSG="[$VALA_PROJECT[NAME]] $MAKEFILE_AM already exist"
-		if [ "${configvalagen[LOGGING]}" == "true" ]; then
-			VALAGEN_LOG[LOG_MSGE]=$MSG
-			VALAGEN_LOG[LOG_FLAG]="error"
-			__logging VALAGEN_LOG
-		fi
-        return $NOT_SUCCESS
-    fi
-    local DATE=$(date)
-    if [ "$TOOL_DBG" == "true" ]; then
-		printf "%s\n" "[not exist]"
-		MSG="Generating [$MAKEFILE_AM]"
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-	local MAKEFILE_AM_FILE="
-#
-# Powered by $TOOL_FROM_COMPANY 
-# $DATE
-# Project ${VALA_PROJECT[NAME]}
-#
-bin_PROGRAMS = ${VALA_PROJECT[NAME]}
-${VALA_PROJECT[NAME]}_CFLAGS = \$(gtk_CFLAGS)
-${VALA_PROJECT[NAME]}_LDADD = \$(gtk_LIBS)
-${VALA_PROJECT[NAME]}_VALAFLAGS = --pkg gtk+-3.0
-${VALA_PROJECT[NAME]}_SOURCES = ${VALA_PROJECT[NAME]}.vala
-desktopdir = \$(datadir)/applications
-desktop_DATA = \
-	${VALA_PROJECT[NAME]}.desktop
-"
-	echo -e "$MAKEFILE_AM_FILE" > "$MAKEFILE_AM"
-	if [ "$TOOL_DBG" == "true" ]; then
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$MAKEFILE_AM]"
-	fi
-	local PRFX_CMD="chown"
-	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
-	eval "$PRFX_CMD $OWNER $MAKEFILE_AM"
-	if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$MAKEFILE_AM]"
-	fi
-    chmod 700 "$MAKEFILE_AM"
-    if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
-	fi
-	MSG="[$VALA_PROJECT[NAME]] Generated $MAKEFILE_AM"
-	if [ "${configvalagen[LOGGING]}" == "true" ]; then
-		VALAGEN_LOG[LOG_MSGE]=$MSG
-		VALAGEN_LOG[LOG_FLAG]="info"
-		__logging VALAGEN_LOG
-	fi
-    return $SUCCESS
-}
-
-#
-# @brief  Generating README file
-# @param  None
-# @retval Success return 0, else 1
-#
-# @usage
-# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#
-# __gen_readme 
-# local STATUS=$?
-#
-# if [ $STATUS -eq $SUCCESS ]; then
-#   # true
-#   # notify admin | user
-# else
-#   # false
-#   # return $NOT_SUCCESS
-#   # or
-#   # exit 128
-# fi
-#
-function __gen_readme() {
-	local FUNC=${FUNCNAME[0]}
-	local MSG="None"
-	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
-	local README="$PROJECT_HOME/${VALA_PROJECT[README]}"
-	if [ "$TOOL_DBG" == "true" ]; then
-		MSG="Checking [$README]"
-		printf "$DQUE" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-    if [ -f "$README" ]; then
-        printf "%s\n" "[already exist]"
-		MSG="[$VALA_PROJECT[NAME]] $README already exist"
-		if [ "${configvalagen[LOGGING]}" == "true" ]; then
-			VALAGEN_LOG[LOG_MSGE]=$MSG
-			VALAGEN_LOG[LOG_FLAG]="info"
-			__logging VALAGEN_LOG
-		fi
-        return $NOT_SUCCESS
-    fi
-    local DATE=$(date)
-    if [ "$TOOL_DBG" == "true" ]; then
-		printf "%s\n" "[not exist]"
-		MSG="Generating [$README]"
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-	local README_FILE="
-#
-# Powered by $TOOL_FROM_COMPANY 
-# $DATE
-# Project ${VALA_PROJECT[NAME]}
-#
-# To build and install this program:
-
-./autogen.sh --prefix=/home/your_username/.local
-make
-make install
-
-# Running the first line above creates the following files:
-
-aclocal.m4
-autom4te.cache
-config.log
-config.status
-configure
-depcomp
-${VALA_PROJECT[NAME]}
-${VALA_PROJECT[NAME]}.c
-${VALA_PROJECT[NAME]}.desktop
-${VALA_PROJECT[NAME]}-${VALA_PROJECT[NAME]}.o
-${VALA_PROJECT[NAME]}_vala.stamp
-install-sh
-missing
-Makefile.in
-Makefile
-
-# Running \"make\" links all the appropriate libraries.
-# Running \"make install\", installs the application in 
-/home/your_username/.local/bin
-# and installs the ${VALA_PROJECT[NAME]}.desktop file in 
-/home/your_username/.local/share/applications
-# You can run the app by typing \"${VALA_PROJECT[NAME]}\" in the Overview.
-
-# To uninstall, type:
-
-make uninstall
-
-# To create a tarball type:
-
-make distcheck
-
-# This will create ${VALA_PROJECT[NAME]}-1.0.tar.xz
-"
-	echo -e "$README_FILE" > "$README"
-	if [ "$TOOL_DBG" == "true" ]; then
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$README]"
-	fi
-	local PRFX_CMD="chown"
-	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
-	eval "$PRFX_CMD $OWNER $README"
-	if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$README]"
-	fi
-    chmod 700 "$README"
-    if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
-	fi
-	MSG="[$VALA_PROJECT[NAME]] Generated $README"
-	if [ "${configvalagen[LOGGING]}" == "true" ]; then
-		VALAGEN_LOG[LOG_MSGE]=$MSG
-		VALAGEN_LOG[LOG_FLAG]="info"
-		__logging VALAGEN_LOG
-	fi
-    return $SUCCESS
-}
-
-#
-# @brief  Generating Vala source file
-# @param  None
-# @retval Success return 0, else 1
-#
-# @usage
-# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#
-# __gen_vala_code 
-# local STATUS=$?
-#
-# if [ $STATUS -eq $SUCCESS ]; then
-#   # true
-#   # notify admin | user
-# else
-#   # false
-#   # return $NOT_SUCCESS
-#   # or
-#   # exit 128
-# fi
-#
-function __gen_vala_code() {
-	local FUNC=${FUNCNAME[0]}
-	local MSG="None"
-	local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
-	local VALA_CODE="$PROJECT_HOME/${VALA_PROJECT[CODE]}"
-	if [ "$TOOL_DBG" == "true" ]; then
-		MSG="Checking [$VALA_CODE]"
-		printf "$DQUE" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-    if [ -f "$VALA_CODE" ]; then
-        printf "%s\n" "[already exist]"
-		MSG="[$VALA_PROJECT[NAME]] $VALA_CODE already exist"
-		if [ "${configvalagen[LOGGING]}" == "true" ]; then
-			VALAGEN_LOG[LOG_MSGE]=$MSG
-			VALAGEN_LOG[LOG_FLAG]="error"
-			__logging VALAGEN_LOG
-		fi
-        return $NOT_SUCCESS
-    fi
-    local DATE=$(date)
-    if [ "$TOOL_DBG" == "true" ]; then
-		printf "%s\n" "[not exist]"
-		MSG="Generating [$VALA_CODE]"
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-	fi
-	local VALA_CODE_FILE="
-/**
- * Automatic generated ${VALA_PROJECT[NAME]}.vala
- * Powered by $TOOL_FROM_COMPANY 
- * $DATE
- * Project ${VALA_PROJECT[NAME]}
- */
-public class ${VALA_PROJECT[NAME]} : Gtk.Application {
-    protected override void activate () {
-        var window = new Gtk.ApplicationWindow (this);
-        var label = new Gtk.Label (\"Simple test!\");
-        window.add (label);
-        window.set_title (\"Welcome to GNOME\");
-        window.set_default_size (200, 100);
-        window.show_all ();
-    }
-}
-
-public int main (string[] args) {
-    return new ${VALA_PROJECT[NAME]} ().run (args);
-}
-"
-	echo -e "$VALA_CODE_FILE" > "$VALA_CODE"
-	if [ "$TOOL_DBG" == "true" ]; then
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set owner [$VALA_CODE]"
-	fi
-	local PRFX_CMD="chown"
-	local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
-	eval "$PRFX_CMD $OWNER $VALA_CODE"
-	if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "Set permission [$VALA_CODE]"
-	fi
-    chmod 700 "$VALA_CODE"
-    if [ "$TOOL_DBG" == "true" ]; then            
-		printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
-	fi
-	MSG="[$VALA_PROJECT[NAME]] Generated $VALA_CODE"
-	if [ "${configvalagen[LOGGING]}" == "true" ]; then
-		VALAGEN_LOG[LOG_MSGE]=$MSG
-		VALAGEN_LOG[LOG_FLAG]="info"
-		__logging VALAGEN_LOG
-	fi
-    return $SUCCESS
-}
 
 #
 # @brief   Main function 
 # @param   None
 # @exitval Function __valagen exit with integer value
-#			0   - tool finished with success operation 
-#			128 - missing argument(s) from cli 
-#			129 - provided wrong argument (check dir)
-#			130 - failed to load tool script configuration from file 
-#			131 - failed to load tool script utilities configuration from file
+#			0   - tool finished with success operation
+#			128 - missing argument(s) from cli
+#			129 - failed to load tool script configuration from files
+#			130 - failed to load project set configuration from file
+#			131 - missing target directory
 #
 # @usage
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #
-# __valagen 
+# __valagen
 #
 function __valagen() {
-	local FUNC=${FUNCNAME[0]}
-	local MSG="None"
-	if [ "${VALA_PROJECT[NAME]}" != "None" ] && 
-	   [ "${VALA_PROJECT[PATH]}" != "None" ] &&
-	   [ "${VALA_PROJECT[COMMENT]}" != "None" ]; then
-		if [ -n "${VALA_PROJECT[NAME]}" ] &&
-		   [ -n "${VALA_PROJECT[PATH]}" ] &&
-           [ -n "${VALA_PROJECT[COMMENT]}" ]; then
-			MSG="Loading basic and util configuration"
-			printf "$SEND" "$VALAGEN_TOOL" "$MSG"
-			__progressbar PB_STRUCTURE
-			printf "%s\n\n" ""
-			declare -A configvalagen=()
-			__loadconf $VALAGEN_CFG configvalagen
-			local STATUS=$?
-			if [ $STATUS -eq $NOT_SUCCESS ]; then
-				MSG="Failed to load tool script configuration"
-				if [ "$TOOL_DBG" == "true" ]; then
-					printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-				else
-					printf "$SEND" "$VALAGEN_TOOL" "$MSG"
-				fi
-				exit 130
-			fi
-			declare -A configvalagenutil=()
-			__loadutilconf $VALAGEN_UTIL_CFG configvalagenutil
-			STATUS=$?
-			if [ $STATUS -eq $NOT_SUCCESS ]; then
-				MSG="Failed to load tool script utilities configuration"
-				if [ "$TOOL_DBG" == "true" ]; then
-					printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-				else
-					printf "$SEND" "$VALAGEN_TOOL" "$MSG"
-				fi
-				exit 131
-			fi
-			MSG="Generating new Vala project [${VALA_PROJECT[NAME]}]"
-			if [ "${configvalagen[LOGGING]}" == "true" ]; then
-				VALAGEN_LOG[LOG_MSGE]=$MSG
-				VALAGEN_LOG[LOG_FLAG]="info"
-				__logging VALAGEN_LOG
-			fi
-		   	if [ "$TOOL_DBG" == "true" ]; then
-				MSG="Checking dir [${VALA_PROJECT[PATH]}/]"
-				printf "$DQUE" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-		   	fi
-			if [ -d "${VALA_PROJECT[PATH]}/" ]; then
-				printf "%s\n" "[ok]"
-				local PROJECT_HOME="${VALA_PROJECT[PATH]}/${VALA_PROJECT[NAME]}"
-				if [ "$TOOL_DBG" == "true" ]; then
-					MSG="Creating dir [$PROJECT_HOME]"
-					printf "$DSTA" "$UTIL_ADDNEWTOOL" "$FUNC" "$MSG"
-				fi
-				mkdir "$PROJECT_HOME/"
-				if [ "$TOOL_DBG" == "true" ]; then
-					MSG="Set owner [$PROJECT_HOME/]"
-					printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-				fi
-				local PRFX_CMD="chown"
-				local OWNER="${configvalagenutil[USER]}.${configvalagenutil[GROUP]}"
-				eval "$PRFX_CMD $OWNER $PROJECT_HOME/"
-				if [ "$TOOL_DBG" == "true" ]; then
-					MSG="Set permission [$PROJECT_HOME/]"
-					printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-				fi
-				chmod 700 "$PROJECT_HOME/"
-				__gen_autogen_sh
-				local STATUS=$?
-				if [ $STATUS -eq $SUCCESS ]; then
-					__gen_configure_ac
-					STATUS=$?
-					if [ $STATUS -eq $SUCCESS ]; then
-						__gen_desktop_in
-						STATUS=$?
-						if [ $STATUS -eq $SUCCESS ]; then
-							__gen_makefile_am
-							STATUS=$?
-							if [ $STATUS -eq $SUCCESS ]; then
-								__gen_readme
-								STATUS=$?
-								if [ $STATUS -eq $SUCCESS ]; then
-									VALA_PROJECT[CODE]="${VALA_PROJECT[NAME]}.vala"
-									__gen_vala_code
-									STATUS=$?
-									if [ $STATUS -eq $SUCCESS ]; then
-										if [ "$TOOL_DBG" == "true" ]; then
-											printf "$DEND" "$VALAGEN_TOOL" "$FUNC" "Done"
-										fi
-										exit 0
-									fi
-								fi
-							fi
-						fi
-					fi
-				fi
-			fi
-			if [ "$TOOL_DBG" == "true" ]; then
-				printf "%s\n" "[not exist]"
-				MSG="Generate [${VALA_PROJECT[PATH]}/]"
-				printf "$DSTA" "$VALAGEN_TOOL" "$FUNC" "$MSG"
-			fi
-			MSG="[$VALA_PROJECT[NAME]] [${VALA_PROJECT[PATH]}/ does not exist"
-			if [ "${configvalagen[LOGGING]}" == "true" ]; then
-				VALAGEN_LOG[MSG]=$MSG
-				VALAGEN_LOG[FLAG]="error"
-				__logging VALAGEN_LOG
-			fi
+	local FUNC=${FUNCNAME[0]} MSG="None" STATUS
+	declare -A VPROJECT_STRUCT=(
+		[1]="${VPROJECT[NAME]}" [2]="${VPROJECT[PATH]}"
+		[3]="${VPROJECT[COMMENT]}" [4]="${VPROJECT[CODE]}"
+	)
+	__check_strings VPROJECT_STRUCT
+	STATUS=$?
+	if [ $STATUS -eq $SUCCESS ]; then
+		local FUNC=${FUNCNAME[0]} MSG="None" STATUS_CONF STATUS_CONF_UTIL
+		MSG="Loading basic and util configuration!"
+		__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+		__progress_bar PB_STRUCTURE
+		declare -A config_valagen=()
+		__load_conf "$VALAGEN_CFG" config_valagen
+		STATUS_CONF=$?
+		declare -A config_valagen_util=()
+		__load_util_conf "$VALAGEN_UTIL_CFG" config_valagen_util
+		STATUS_CONF_UTIL=$?
+		declare -A STATUS_STRUCTURE=(
+			[1]=$STATUS_CONF [2]=$STATUS_CONF_UTIL
+		)
+		__check_status STATUS_STRUCTURE
+		STATUS=$?
+		if [ $STATUS -eq $NOT_SUCCESS ]; then
+			MSG="Force exit!"
+			__info_debug_message_end "$MSG" "$FUNC" "$VALAGEN_TOOL"
 			exit 129
 		fi
+		TOOL_LOG=${config_valagen[LOGGING]}
+		TOOL_DBG=${config_valagen[DEBUGGING]}
+		TOOL_NOTIFY=${config_valagen[EMAILING]}
+		local PROJECT_SET=${config_valagen_util[PROJECT_SET]}
+		declare -A project_set=()
+		__load_util_conf "${VALAGEN_HOME}/conf/${PROJECT_SET}" project_set
+		STATUS=$?
+		if [ $STATUS -eq $NOT_SUCCESS ]; then
+			MSG="Force exit!"
+			__info_debug_message_end "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			exit 130
+		fi
+		MSG="Generating project structure!"
+		__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+		MSG="Checking directory [${VPROJECT[PATH]}/]?"
+		__info_debug_message_que "$MSG" "$FUNC" "$VALAGEN_TOOL"
+		if [ -d "${VPROJECT[PATH]}/" ]; then
+			MSG="[ok]"
+			__info_debug_message_ans "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			local PHOME="${VPROJECT[PATH]}/${VPROJECT[NAME]}"
+			MSG="Generating directory [${PHOME}/]"
+			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			mkdir "${PHOME}/"
+			local AUTHOR_NAME=${config_valagen_util[AUTHOR_NAME]} DATE=`date`
+			local AUTHOR_EMAIL=${config_valagen_util[AUTHOR_EMAIL]} AL
+			local ASHT=${project_set[AUTOGEN_SH]} HASH="#" BSLASH="\\"
+			local ASHF="${PHOME}/${VPROJECT[AUTOGEN]}" TAB="	" TREE
+			local ASHTF="${VALAGEN_HOME}/conf/${ASHT}"
+			MSG="Generating file [${ASHF}]"
+			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			while read AL
+			do
+				eval echo "${AL}" >> ${ASHF}
+			done < ${ASHTF}
+			local CT=${project_set[CONFIGURE_AC]}
+			local CF="${PHOME}/${VPROJECT[CONFIGURE]}" CL
+			local CTF="${VALAGEN_HOME}/conf/${CT}"
+			MSG="Generating file [${CF}]"
+			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			while read CL
+			do
+				eval echo "${CL}" >> ${CF}
+			done < ${CTF}
+			local DT=${project_set[DESKTOP_IN]}
+			local DF="${PHOME}/${VPROJECT[NAME]}.${VPROJECT[DESKTOP]}" DL
+			local DTF="${VALAGEN_HOME}/conf/${DT}"
+			MSG="Generating file [${DF}]"
+			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			while read DL
+			do
+				eval echo "${DL}" >> ${DF}
+			done < ${DTF}
+			local MSF="${PHOME}/${VPROJECT[MAKEFILE]}"
+			local MST=${project_set[MAKEFILE_AMS]}
+			local MSTF="${VALAGEN_HOME}/conf/${MST}" MSL
+			MSG="Generating file [${MSF}]"
+			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			while read MSL
+			do
+				eval echo "${MSL}" >> ${MSF}
+			done < ${MSTF}
+			local VT=${project_set[V_SOURCE]} VF="${PHOME}/${VPROJECT[CODE]}"
+			local VTF="${VALAGEN_HOME}/conf/${VT}" VL
+			MSG="Generating file [${VF}]"
+			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			while read VL
+			do
+				eval echo "${VL}" >> ${VF}
+			done < ${VTF}
+			local RT=${project_set[README]} RF="${PHOME}/${VPROJECT[README]}"
+			local RTF="${VALAGEN_HOME}/conf/${RT}" RL
+			MSG="Generating file [${RF}]"
+			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			while read RL
+			do
+				eval echo "${RL}" >> ${RF}
+			done < ${RTF}
+			MSG="Set owner!"
+			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			local USRID=${config_valagen_util[GID]}
+			local GRPID=${config_valagen_util[UID]}
+			eval "chown -R ${USRID}.${GRPID} ${PHOME}/"
+			MSG="Set permission!"
+			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			eval "chmod -R 700 ${PHOME}/"
+			__info_debug_message_end "Done" "$FUNC" "$VALAGEN_TOOL"
+			TREE=$(which tree)
+			__check_tool "${TREE}"
+			STATUS=$?
+			if [ $STATUS -eq $SUCCESS ]; then
+				eval "${TREE} -L 3 ${PHOME}/"
+			fi
+			exit 0
+		fi
+		MSG="[not ok]"
+		__info_debug_message_ans "$MSG" "$FUNC" "$VALAGEN_TOOL"
+		MSG="Generate directory [${VPROJECT[PATH]}/]"
+		__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+		MSG="Force exit!"
+		__info_debug_message_end "$MSG" "$FUNC" "$VALAGEN_TOOL"
+		exit 131
 	fi
 	__usage VALAGEN_USAGE
 	exit 128
@@ -738,19 +219,20 @@ function __valagen() {
 # @brief   Main entry point
 # @params  Values required project name, project path and comment
 # @exitval Script tool valagen exit with integer value
-#			0   - tool finished with success operation 
+#			0   - tool finished with success operation
 #			127 - run tool script as root user from cli
-#			128 - missing argument(s) from cli 
-#			129 - provided wrong argument (check dir)
-#			130 - failed to load tool script configuration from file 
-#			131 - failed to load tool script utilities configuration from file
+#			128 - missing argument(s) from cli
+#			129 - failed to load tool script configuration from files
+#			130 - failed to load project set configuration from file
+#			131 - missing target directory
 #
-VALA_PROJECT[NAME]="$1"
-VALA_PROJECT[PATH]="$2"
-VALA_PROJECT[COMMENT]="$3"
+VPROJECT[NAME]="$1"
+VPROJECT[PATH]="$2"
+VPROJECT[COMMENT]="$3"
+VPROJECT[CODE]="${1}.vala"
 
-printf "\n%s\n%s\n\n" "$VALAGEN_TOOL $VALAGEN_VERSION" "`date`"
-__checkroot
+printf "\n%s\n%s\n\n" "${VALAGEN_TOOL} ${VALAGEN_VERSION}" "`date`"
+__check_root
 STATUS=$?
 if [ $STATUS -eq $SUCCESS ]; then
 	__valagen
