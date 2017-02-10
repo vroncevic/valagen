@@ -132,10 +132,10 @@ function __valagen() {
 			MSG="Generating directory [${PHOME}/]"
 			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
 			mkdir "${PHOME}/"
-			local AUTHOR_NAME=${config_valagen_util[AUTHOR_NAME]} DATE=`date`
-			local AUTHOR_EMAIL=${config_valagen_util[AUTHOR_EMAIL]} AL
-			local ASHT=${project_set[AUTOGEN_SH]} HASH="#" BSLASH="\\"
-			local ASHF="${PHOME}/${VPROJECT[AUTOGEN]}" TAB="	" TREE
+			local AN=${config_valagen_util[AUTHOR_NAME]} DATE=`date`
+			local AE=${config_valagen_util[AUTHOR_EMAIL]} AL T="	"
+			local ASHT=${project_set[AUTOGEN_SH]} H="#" BSL="\\"
+			local ASHF="${PHOME}/${VPROJECT[AUTOGEN]}" TREE
 			local ASHTF="${VALAGEN_HOME}/conf/${ASHT}"
 			MSG="Generating file [${ASHF}]"
 			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
@@ -178,6 +178,12 @@ function __valagen() {
 			do
 				eval echo "${VL}" >> ${VF}
 			done < ${VTF}
+			local VET=${project_set[V_EDIT]}
+			local VETF=$(cat "${VALAGEN_HOME}/conf/${VET}")
+			local VEF="${PHOME}/.editorconfig"
+			MSG="Generating file [${VEF}]"
+			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
+			echo -e "${VETF}" > "${VEF}"
 			local RT=${project_set[README]} RF="${PHOME}/${VPROJECT[README]}"
 			local RTF="${VALAGEN_HOME}/conf/${RT}" RL
 			MSG="Generating file [${RF}]"
@@ -194,6 +200,9 @@ function __valagen() {
 			MSG="Set permission!"
 			__info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
 			eval "chmod -R 700 ${PHOME}/"
+			MSG="Generated Vala project ${PHOME}/"
+			VALAGEN_LOGGING[LOG_MSGE]=$MSG
+			__logging VALAGEN_LOGGING
 			__info_debug_message_end "Done" "$FUNC" "$VALAGEN_TOOL"
 			TREE=$(which tree)
 			__check_tool "${TREE}"
