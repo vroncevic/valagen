@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # @brief   Generate Vala Project
-# @version ver.1.0
+# @version ver.1.0.0
 # @date    Thu Jan 14 22:26:32 2016
 # @company Frobas IT Department, www.frobas.com 2016
 # @author  Vladimir Roncevic <vladimir.roncevic@frobas.com>
