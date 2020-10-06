@@ -27,13 +27,13 @@ VALAGEN_CFG=${VALAGEN_HOME}/conf/${VALAGEN_TOOL}.cfg
 VALAGEN_UTIL_CFG=${VALAGEN_HOME}/conf/${VALAGEN_TOOL}_util.cfg
 VALAGEN_LOG=${VALAGEN_HOME}/log
 
-declare -A VALAGEN_USAGE=(
-    [USAGE_TOOL]="${VALAGEN_TOOL}"
-    [USAGE_ARG1]="[PROJECT_NAME] Name of project"
-    [USAGE_ARG2]="[PROJECT_PATH] Project root folder"
-    [USAGE_ARG3]="[COMMENT] Short description"
-    [USAGE_EX_PRE]="# Generating vala project"
-    [USAGE_EX]="${VALAGEN_TOOL} ftool /opt/ \"Font generator\""
+declare -A VALAGEN_Usage=(
+    [Usage_TOOL]="${VALAGEN_TOOL}"
+    [Usage_ARG1]="[PROJECT_NAME] Name of project"
+    [Usage_ARG2]="[PROJECT_PATH] Project root folder"
+    [Usage_ARG3]="[COMMENT] Short description"
+    [Usage_EX_PRE]="# Generating vala project"
+    [Usage_EX]="${VALAGEN_TOOL} ftool /opt/ \"Font generator\""
 )
 
 declare -A VALAGEN_LOGGING=(
@@ -220,7 +220,7 @@ function __valagen {
         info_debug_message_end "$MSG" "$FUNC" "$VALAGEN_TOOL"
         exit 131
     fi
-    usage VALAGEN_USAGE
+    usage VALAGEN_Usage
     exit 128
 }
 
