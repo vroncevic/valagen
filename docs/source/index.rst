@@ -1,14 +1,14 @@
-VALAGEN
----------
-
-.. toctree::
- :hidden:
-
- self
+valagen
+--------
 
 **valagen** is shell tool for creating Vala project.
 
 Developed in `bash <https://en.wikipedia.org/wiki/Bash_(Unix_shell)>`_ code: **100%**.
+
+|GitHub shell checker|
+
+.. |GitHub shell checker| image:: https://github.com/vroncevic/valagen/workflows/valagen%20shell%20checker/badge.svg
+   :target: https://github.com/vroncevic/valagen/actions?query=workflow%3A%22valagen+shell+checker%22
 
 The README is used to introduce the tool and provide instructions on
 how to install the tool, any machine dependencies it may have and any
@@ -25,7 +25,12 @@ other information that should be provided before the tool is installed.
 .. |Documentation Status| image:: https://readthedocs.org/projects/valagen/badge/?version=latest
    :target: https://valagen.readthedocs.io/projects/valagen/en/latest/?badge=latest
 
-INSTALLATION
+.. toctree::
+    :hidden:
+
+    self
+
+Installation
 -------------
 
 Navigate to release `page`_ download and extract release archive.
@@ -42,13 +47,20 @@ To install **valagen** type the following:
    cp -R ~/sh_tool/conf/  /root/scripts/valagen/ver.1.0/
    cp -R ~/sh_tool/log/   /root/scripts/valagen/ver.1.0/
 
-DEPENDENCIES
+Or You can use Docker to create image/container.
+
+|GitHub docker checker|
+
+.. |GitHub docker checker| image:: https://github.com/vroncevic/valagen/workflows/valagen%20docker%20checker/badge.svg
+   :target: https://github.com/vroncevic/valagen/actions?query=workflow%3A%22valagen+docker+checker%22
+
+Dependencies
 -------------
 
 **valagen** requires next modules and libraries:
     sh_util `https://github.com/vroncevic/sh_util <https://github.com/vroncevic/sh_util>`_
 
-SHELL TOOL STRUCTURE
+Shell tool structure
 ---------------------
 
 **valagen** is based on MOP.
@@ -75,7 +87,7 @@ Code structure:
    └── log/
        └── valagen.log
 
-COPYRIGHT AND LICENCE
+Copyright and licence
 ----------------------
 
 |License: GPL v3| |License: Apache 2.0|
@@ -88,7 +100,7 @@ COPYRIGHT AND LICENCE
 
 Copyright (C) 2016 by `vroncevic.github.io/valagen <https://vroncevic.github.io/valagen>`_
 
-This tool is free software; you can redistribute it and/or modify it
+**valagen** is free software; you can redistribute it and/or modify it
 under the same terms as Bash itself, either Bash version 4.2.47 or,
 at your option, any later version of Bash 4 you may have available.
 
