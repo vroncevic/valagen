@@ -41,11 +41,11 @@ To install **valagen** type the following:
 
 .. code-block:: bash
 
-   tar xvzf valagen-x.y.z.tar.gz
-   cd valagen-x.y.z
-   cp -R ~/sh_tool/bin/   /root/scripts/valagen/ver.1.0/
-   cp -R ~/sh_tool/conf/  /root/scripts/valagen/ver.1.0/
-   cp -R ~/sh_tool/log/   /root/scripts/valagen/ver.1.0/
+   tar xvzf valagen-x.y.tar.gz
+   cd valagen-x.y
+   cp -R ~/sh_tool/bin/   /root/scripts/valagen/ver.x.y/
+   cp -R ~/sh_tool/conf/  /root/scripts/valagen/ver.x.y/
+   cp -R ~/sh_tool/log/   /root/scripts/valagen/ver.x.y/
 
 Or You can use Docker to create image/container.
 
@@ -70,7 +70,7 @@ Code structure:
 
 .. code-block:: bash
 
-   .
+   sh_tool/
    ├── bin/
    │   └── valagen.sh
    ├── conf/
