@@ -1,3 +1,5 @@
+<img align="right" src="https://raw.githubusercontent.com/vroncevic/valagen/dev/docs/valagen_logo.png" width="25%">
+
 # Generating Vala Project
 
 **valagen** is shell tool for creating Vala project.
@@ -32,11 +34,11 @@ Navigate to release **[page](https://github.com/vroncevic/valagen/releases)** do
 To install **valagen** type the following:
 
 ```
-tar xvzf valagen-x.y.z.tar.gz
-cd valagen-x.y.z
-cp -R ~/sh_tool/bin/   /root/scripts/valagen/ver.1.0/
-cp -R ~/sh_tool/conf/  /root/scripts/valagen/ver.1.0/
-cp -R ~/sh_tool/log/   /root/scripts/valagen/ver.1.0/
+tar xvzf valagen-x.y.tar.gz
+cd valagen-x.y
+cp -R ~/sh_tool/bin/   /root/scripts/valagen/ver.x.y/
+cp -R ~/sh_tool/conf/  /root/scripts/valagen/ver.x.y/
+cp -R ~/sh_tool/log/   /root/scripts/valagen/ver.x.y/
 ```
 
 ![alt tag](https://raw.githubusercontent.com/vroncevic/valagen/dev/docs/setup_tree.png)
@@ -49,7 +51,7 @@ Or You can use docker to create image/container.
 
 ```
 # Create symlink for shell tool
-ln -s /root/scripts/valagen/ver.1.0/bin/valagen.sh /root/bin/valagen
+ln -s /root/scripts/valagen/ver.x.y/bin/valagen.sh /root/bin/valagen
 
 # Setting PATH
 export PATH=${PATH}:/root/bin/
@@ -69,7 +71,7 @@ valagen MyApp
 
 Code structure:
 ```
-.
+sh_tool/
 ├── bin/
 │   └── valagen.sh
 ├── conf/

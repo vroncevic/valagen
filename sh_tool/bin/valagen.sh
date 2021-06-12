@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # @brief   Generate Vala Project
-# @version ver.1.0.0
+# @version ver.1.0
 # @date    Thu Jan 14 22:26:32 2016
 # @company Frobas IT Department, www.frobas.com 2016
 # @author  Vladimir Roncevic <vladimir.roncevic@frobas.com>
@@ -27,7 +27,7 @@ VALAGEN_CFG=${VALAGEN_HOME}/conf/${VALAGEN_TOOL}.cfg
 VALAGEN_UTIL_CFG=${VALAGEN_HOME}/conf/${VALAGEN_TOOL}_util.cfg
 VALAGEN_LOG=${VALAGEN_HOME}/log
 
-declare -A VALAGEN_Usage=(
+declare -A VALAGEN_USAGE=(
     [Usage_TOOL]="${VALAGEN_TOOL}"
     [Usage_ARG1]="[PROJECT_NAME] Name of project"
     [Usage_ARG2]="[PROJECT_PATH] Project root folder"
@@ -194,8 +194,8 @@ function __valagen {
             done < ${RTF}
             MSG="Set owner!"
             info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
-            local USRID=${config_valagen_util[GID]}
-            local GRPID=${config_valagen_util[UID]}
+            local USRID=${config_valagen_util[USERID]}
+            local GRPID=${config_valagen_util[GROUPID]}
             eval "chown -R ${USRID}.${GRPID} ${PHOME}/"
             MSG="Set permission!"
             info_debug_message "$MSG" "$FUNC" "$VALAGEN_TOOL"
@@ -220,7 +220,7 @@ function __valagen {
         info_debug_message_end "$MSG" "$FUNC" "$VALAGEN_TOOL"
         exit 131
     fi
-    usage VALAGEN_Usage
+    usage VALAGEN_USAGE
     exit 128
 }
 
