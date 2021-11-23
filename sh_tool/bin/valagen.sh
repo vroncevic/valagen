@@ -21,19 +21,26 @@ UTIL_LOG=${UTIL}/log
 .    ${UTIL}/bin/progress_bar.sh
 
 VALAGEN_TOOL=valagen
-VALAGEN_VERSION=ver.1.0
+VALAGEN_VERSION=ver.2.0
 VALAGEN_HOME=${UTIL_ROOT}/${VALAGEN_TOOL}/${VALAGEN_VERSION}
 VALAGEN_CFG=${VALAGEN_HOME}/conf/${VALAGEN_TOOL}.cfg
 VALAGEN_UTIL_CFG=${VALAGEN_HOME}/conf/${VALAGEN_TOOL}_util.cfg
+VALAGEN_LOGO=${VALAGEN_HOME}/conf/${VALAGEN_TOOL}.logo
 VALAGEN_LOG=${VALAGEN_HOME}/log
 
+tabs 4
+CONSOLE_WIDTH=$(stty size | awk '{print $2}')
+
+.    ${VALAGEN_HOME}/bin/center.sh
+.    ${VALAGEN_HOME}/bin/display_logo.sh
+
 declare -A VALAGEN_USAGE=(
-    [Usage_TOOL]="${VALAGEN_TOOL}"
-    [Usage_ARG1]="[PROJECT_NAME] Name of project"
-    [Usage_ARG2]="[PROJECT_PATH] Project root folder"
-    [Usage_ARG3]="[COMMENT] Short description"
-    [Usage_EX_PRE]="# Generating vala project"
-    [Usage_EX]="${VALAGEN_TOOL} ftool /opt/ \"Font generator\""
+    [USAGE_TOOL]="${VALAGEN_TOOL}"
+    [USAGE_ARG1]="[PROJECT_NAME] Name of project"
+    [USAGE_ARG2]="[PROJECT_PATH] Project root folder"
+    [USAGE_ARG3]="[COMMENT] Short description"
+    [USAGE_EX_PRE]="# Generating vala project"
+    [USAGE_EX]="${VALAGEN_TOOL} ftool /opt/ \"Font generator\""
 )
 
 declare -A VALAGEN_LOGGING=(
@@ -82,12 +89,17 @@ declare -A VPROJECT=(
 #
 function __valagen {
     local FUNC=${FUNCNAME[0]} MSG="None" STATUS
-    declare -A VPROJECT_STRUCT=(
-        [1]="${VPROJECT[NAME]}" [2]="${VPROJECT[PATH]}"
-        [3]="${VPROJECT[COMMENT]}" [4]="${VPROJECT[CODE]}"
-    )
-    check_strings VPROJECT_STRUCT
-    STATUS=$?
+    local NUMBER_OF_PARAMS=$#
+    VPROJECT[NAME]="$1"
+    VPROJECT[PATH]="$2"
+    VPROJECT[COMMENT]="$3"
+    VPROJECT[CODE]="${1}.vala"
+    display_logo
+    if [ $NUMBER_OF_PARAMS -eq 4 ]; then
+        STATUS=$SUCCESS
+    else
+        STATUS=$NOT_SUCCESS
+    fi
     if [ $STATUS -eq $SUCCESS ]; then
         local FUNC=${FUNCNAME[0]} MSG="None" STATUS_CONF STATUS_CONF_UTIL
         MSG="Loading basic and util configuration!"
@@ -235,17 +247,13 @@ function __valagen {
 #            130 - failed to load project set configuration from file
 #            131 - missing target directory
 #
-VPROJECT[NAME]="$1"
-VPROJECT[PATH]="$2"
-VPROJECT[COMMENT]="$3"
-VPROJECT[CODE]="${1}.vala"
+
 
 printf "\n%s\n%s\n\n" "${VALAGEN_TOOL} ${VALAGEN_VERSION}" "`date`"
 check_root
 STATUS=$?
 if [ $STATUS -eq $SUCCESS ]; then
-    __valagen
+    __valagen $1 $2 $3
 fi
 
 exit 127
-
