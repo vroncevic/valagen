@@ -111,7 +111,7 @@ Tue 23 Nov 2021 07:20:05 PM CET
 	  \_/ \__,_|_|\__,_|\__, |\___|_| |_|
 	                    |___/            
 	                                     
-	Info   'github.io/valagen' ver.2.0 
+	Info   github.io/valagen ver.2.0
 	Issue  github.io/issue
 	Author vroncevic.github.io
 

@@ -21,7 +21,7 @@ function display_logo {
     local ORG='vroncevic'
     local REPO='valagen'
     local INFO_URL="https://${ORG}.github.io/${REPO}"
-    local INFO_TXT="'github.io/${REPO}'"
+    local INFO_TXT="github.io/${REPO}"
     local ISSUE_URL="https://github.com/${ORG}/${REPO}/issues/new/choose"
     local ISSUE_TXT='github.io/issue'
     local AUTHOR_URL="https://${ORG}.github.io/bio/"
