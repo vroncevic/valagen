@@ -6,7 +6,7 @@
 
 Developed in **[bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))** code: **100%**.
 
-[![valagen shell checker](https://github.com/vroncevic/valagen/workflows/valagen%20shell%20checker/badge.svg)](https://github.com/vroncevic/valagen/actions?query=workflow%3A%22valagen+shell+checker%22)
+[![valagen_shell_checker](https://github.com/vroncevic/valagen/actions/workflows/valagen_shell_checker.yml/badge.svg)](https://github.com/vroncevic/valagen/actions/workflows/valagen_shell_checker.yml)
 
 The README is used to introduce the tool and provide instructions on
 how to install the tool, any machine dependencies it may have and any
@@ -83,8 +83,6 @@ lrwxrwxrwx 1 root root 44 Nov 23 17:54 /root/bin/valagen -> /root/scripts/valage
 
 Or You can use docker to create image/container.
 
-[![valagen docker checker](https://github.com/vroncevic/valagen/workflows/valagen%20docker%20checker/badge.svg)](https://github.com/vroncevic/valagen/actions?query=workflow%3A%22valagen+docker+checker%22)
-
 ### Usage
 
 ```
@@ -102,14 +100,16 @@ Tue 23 Nov 2021 07:20:05 PM CET
 
 [check_root] Check permission for current session? [ok]
 [check_root] Done
-
-	                                     
-	            _                        
-	__   ____ _| | __ _  __ _  ___ _ __  
-	\ \ / / _` | |/ _` |/ _` |/ _ \ '_ \ 
-	 \ V / (_| | | (_| | (_| |  __/ | | |
-	  \_/ \__,_|_|\__,_|\__, |\___|_| |_|
-	                    |___/            
+                                                              
+                       ██                                     
+                      ░██                                     
+   ██    ██  ██████   ░██  ██████    █████   █████  ███████   
+  ░██   ░██ ░░░░░░██  ░██ ░░░░░░██  ██░░░██ ██░░░██░░██░░░██  
+  ░░██ ░██   ███████  ░██  ███████ ░██  ░██░███████ ░██  ░██  
+   ░░████   ██░░░░██  ░██ ██░░░░██ ░░██████░██░░░░  ░██  ░██  
+    ░░██   ░░████████ ███░░████████ ░░░░░██░░██████ ███  ░██  
+     ░░     ░░░░░░░░ ░░░  ░░░░░░░░   █████  ░░░░░░ ░░░   ░░   
+                                    ░░░░░                     
 	                                     
 	Info   github.io/valagen ver.2.0
 	Issue  github.io/issue
@@ -213,7 +213,7 @@ More documentation and info at
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Copyright (C) 2016 by [vroncevic.github.io/valagen](https://vroncevic.github.io/valagen)
+Copyright (C) 2016 - 2024 by [vroncevic.github.io/valagen](https://vroncevic.github.io/valagen)
 
 **valagen** is free software; you can redistribute it and/or modify
 it under the same terms as Bash itself, either Bash version 4.2.47 or,

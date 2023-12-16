@@ -1,8 +1,8 @@
-name: valagen toc
+name: valagen_toc
 on: push
 jobs:
   generateTOC:
     name: TOC Generator
     runs-on: ubuntu-latest
     steps:
-      - uses: technote-space/toc-generator@v2
+      - uses: technote-space/toc-generator@v4
