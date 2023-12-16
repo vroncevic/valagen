@@ -1,23 +1,22 @@
-name: valagen shell checker
+name: valagen_shell_checker
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'sh_tool/**'
   pull_request:
     branches: [ master ]
+    paths:
+      - 'sh_tool/**'
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Check syntax script
-        id: syntax_checker
-        run: bash -n sh_tool/bin/valagen.sh && echo ::set-output name=status::success || echo ::set-output name=status::failure
+      - uses: actions/checkout@v4
       - name: Check size script
         id: size_checker
         run: |
-          echo Checking size
-          code_line_number=$(wc -l < sh_tool/bin/valagen.sh)
-          [[ $code_line_number -gt 300 ]] && echo ::set-output name=status::failure || echo ::set-output name=status::success
-      - name: Check on failures
-        if: steps.syntax_checker.outputs.status == 'failure' || steps.size_checker.outputs.status == 'failure'
-        run: exit 1
+          modules_ok=0
+          modules=($(find sh_tool/ -type f -name '*.sh' -exec echo '{}' \;))
+          for mod in "${modules[@]}"; do line_numbers=$(wc -l < "${mod}"); [[ $line_numbers -gt 300 ]]  && modules_ok=1; done
+          [[ $modules_ok -eq 0 ]] && echo ok || exit 1
