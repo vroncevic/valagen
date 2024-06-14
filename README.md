@@ -1,6 +1,6 @@
-<img align="right" src="https://raw.githubusercontent.com/vroncevic/valagen/dev/docs/valagen_logo.png" width="25%">
-
 # Generating Vala Project
+
+<img align="right" src="https://raw.githubusercontent.com/vroncevic/valagen/dev/docs/valagen_logo.png" width="25%">
 
 **valagen** is shell tool for creating Vala project.
 
@@ -35,7 +35,7 @@ Navigate to release **[page](https://github.com/vroncevic/valagen/releases)** do
 
 To install **valagen** type the following
 
-```
+```bash
 tar xvzf valagen-x.y.tar.gz
 cd valagen-x.y
 cp -R ~/sh_tool/bin/   /root/scripts/valagen/ver.x.y/
@@ -44,7 +44,8 @@ cp -R ~/sh_tool/log/   /root/scripts/valagen/ver.x.y/
 ```
 
 Self generated setup script and execution
-```
+
+```bash
 ./valagen_setup.sh
 
 [setup] installing App/Tool/Script valagen
@@ -85,7 +86,7 @@ Or You can use docker to create image/container.
 
 ### Usage
 
-```
+```bash
 # Create symlink for shell tool
 ln -s /root/scripts/valagen/ver.x.y/bin/valagen.sh /root/bin/valagen
 
@@ -178,7 +179,8 @@ Tue 23 Nov 2021 07:20:05 PM CET
 **valagen** is based on MOP.
 
 Shell tool structure
-```
+
+```bash
 sh_tool/
 ├── bin/
 │   ├── center.sh
