@@ -36,11 +36,11 @@ Navigate to release **[page](https://github.com/vroncevic/valagen/releases)** do
 To install **valagen** type the following
 
 ```bash
-tar xvzf valagen-x.y.tar.gz
-cd valagen-x.y
-cp -R ~/sh_tool/bin/   /root/scripts/valagen/ver.x.y/
-cp -R ~/sh_tool/conf/  /root/scripts/valagen/ver.x.y/
-cp -R ~/sh_tool/log/   /root/scripts/valagen/ver.x.y/
+tar xvzf valagen-3.0.tar.gz
+cd valagen-3.0
+cp -R ~/sh_tool/bin/   /root/scripts/valagen/ver.3.0/
+cp -R ~/sh_tool/conf/  /root/scripts/valagen/ver.3.0/
+cp -R ~/sh_tool/log/   /root/scripts/valagen/ver.3.0/
 ```
 
 Self generated setup script and execution
@@ -49,7 +49,7 @@ Self generated setup script and execution
 ./valagen_setup.sh
 
 [setup] installing App/Tool/Script valagen
-	Tue 23 Nov 2021 05:54:54 PM CET
+	Tue Dec 16 06:17:29 PM CET 2025
 [setup] clean up App/Tool/Script structure
 [setup] copy App/Tool/Script structure
 [setup] remove github editor configuration files
@@ -57,10 +57,8 @@ Self generated setup script and execution
 [setup] create symbolic link of App/Tool/Script
 [setup] done
 
-/root/scripts/valagen/ver.2.0/
+/root/scripts/valagen/ver.3.0/
 ├── bin/
-│   ├── center.sh
-│   ├── display_logo.sh
 │   └── valagen.sh
 ├── conf/
 │   ├── project_set.cfg
@@ -79,7 +77,7 @@ Self generated setup script and execution
     └── valagen.log
 
 4 directories, 15 files
-lrwxrwxrwx 1 root root 44 Nov 23 17:54 /root/bin/valagen -> /root/scripts/valagen/ver.2.0/bin/valagen.sh
+lrwxrwxrwx 1 root root 44 Dec 16 06:17 /root/bin/valagen -> /root/scripts/valagen/ver.3.0/bin/valagen.sh
 ```
 
 Or You can use docker to create image/container.
@@ -88,7 +86,7 @@ Or You can use docker to create image/container.
 
 ```bash
 # Create symlink for shell tool
-ln -s /root/scripts/valagen/ver.x.y/bin/valagen.sh /root/bin/valagen
+ln -s /root/scripts/valagen/ver.3.0/bin/valagen.sh /root/bin/valagen
 
 # Setting PATH
 export PATH=${PATH}:/root/bin/
@@ -96,8 +94,8 @@ export PATH=${PATH}:/root/bin/
 # Creating Vala project
 valagen ftool "/opt" "Font generator"
                                                                                                                                                                  
-valagen ver.2.0
-Tue 23 Nov 2021 07:20:05 PM CET
+valagen ver.3.0
+Tue Dec 16 06:17:49 PM CET 2025
 
 [check_root] Check permission for current session? [ok]
 [check_root] Done
@@ -112,7 +110,7 @@ Tue 23 Nov 2021 07:20:05 PM CET
      ░░     ░░░░░░░░ ░░░  ░░░░░░░░   █████  ░░░░░░ ░░░   ░░   
                                     ░░░░░                     
 	                                     
-	Info   github.io/valagen ver.2.0
+	Info   github.io/valagen ver.3.0
 	Issue  github.io/issue
 	Author vroncevic.github.io
 
@@ -120,19 +118,19 @@ Tue 23 Nov 2021 07:20:05 PM CET
 100% [================================================]
 
 [load_conf] Loading App/Tool/Script configuration!
-[check_cfg] Checking configuration file [/root/scripts/valagen/ver.2.0/conf/valagen.cfg] [ok]
+[check_cfg] Checking configuration file [/root/scripts/valagen/ver.3.0/conf/valagen.cfg] [ok]
 [check_cfg] Done
 
 [load_conf] Done
 
 [load_util_conf] Load module configuration!
-[check_cfg] Checking configuration file [/root/scripts/valagen/ver.2.0/conf/valagen_util.cfg] [ok]
+[check_cfg] Checking configuration file [/root/scripts/valagen/ver.3.0/conf/valagen_util.cfg] [ok]
 [check_cfg] Done
 
 [load_util_conf] Done
 
 [load_util_conf] Load module configuration!
-[check_cfg] Checking configuration file [/root/scripts/valagen/ver.2.0/conf/project_set.cfg] [ok]
+[check_cfg] Checking configuration file [/root/scripts/valagen/ver.3.0/conf/project_set.cfg] [ok]
 [check_cfg] Done
 
 [load_util_conf] Done
@@ -149,7 +147,7 @@ Tue 23 Nov 2021 07:20:05 PM CET
 [valagen] Generating file [/opt/ftool/README]
 [valagen] Set owner!
 [valagen] Set permission!
-[logging] Checking directory [/root/scripts/valagen/ver.2.0/log/]? [ok]
+[logging] Checking directory [/root/scripts/valagen/ver.3.0/log/]? [ok]
 [logging] Write info log!
 [logging] Done
 
@@ -166,7 +164,7 @@ Tue 23 Nov 2021 07:20:05 PM CET
 ├── Makefile.am
 └── README
 
-0 directories, 6 files
+1 directories, 6 files
 ```
 
 ### Dependencies
@@ -183,8 +181,6 @@ Shell tool structure
 ```bash
 sh_tool/
 ├── bin/
-│   ├── center.sh
-│   ├── display_logo.sh
 │   └── valagen.sh
 ├── conf/
 │   ├── project_set.cfg
@@ -215,7 +211,7 @@ More documentation and info at
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Copyright (C) 2016 - 2024 by [vroncevic.github.io/valagen](https://vroncevic.github.io/valagen)
+Copyright (C) 2016 - 2026 by [vroncevic.github.io/valagen](https://vroncevic.github.io/valagen)
 
 **valagen** is free software; you can redistribute it and/or modify
 it under the same terms as Bash itself, either Bash version 4.2.47 or,
