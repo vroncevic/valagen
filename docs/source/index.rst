@@ -46,11 +46,11 @@ To install **valagen** type the following
 
 .. code-block:: bash
 
-   tar xvzf valagen-x.y.tar.gz
-   cd valagen-x.y
-   cp -R ~/sh_tool/bin/   /root/scripts/valagen/ver.x.y/
-   cp -R ~/sh_tool/conf/  /root/scripts/valagen/ver.x.y/
-   cp -R ~/sh_tool/log/   /root/scripts/valagen/ver.x.y/
+   tar xvzf valagen-3.0.tar.gz
+   cd valagen-3.0
+   cp -R ~/sh_tool/bin/   /root/scripts/valagen/ver.3.0/
+   cp -R ~/sh_tool/conf/  /root/scripts/valagen/ver.3.0/
+   cp -R ~/sh_tool/log/   /root/scripts/valagen/ver.3.0/
 
 Or You can use Docker to create image/container.
 
@@ -72,8 +72,6 @@ Shell tool structure
 
    sh_tool/
    ├── bin/
-   │   ├── center.sh
-   │   ├── display_logo.sh
    │   └── valagen.sh
    ├── conf/
    │   ├── project_set.cfg
@@ -102,7 +100,7 @@ Copyright and licence
 .. |License: Apache 2.0| image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
    :target: https://opensource.org/licenses/Apache-2.0
 
-Copyright (C) 2016 - 2024 by `vroncevic.github.io/valagen <https://vroncevic.github.io/valagen>`_
+Copyright (C) 2016 - 2026 by `vroncevic.github.io/valagen <https://vroncevic.github.io/valagen>`_
 
 **valagen** is free software; you can redistribute it and/or modify it
 under the same terms as Bash itself, either Bash version 4.2.47 or,
